@@ -1,0 +1,181 @@
+/* ===== GALLERY PAGE BASE ===== */
+.gallery-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #fff;
+  overflow-x: hidden;
+  perspective: 1500px;
+  scroll-behavior: smooth;
+}
+
+/* ===== BACKGROUND LAYER ===== */
+.gallery-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 120%;
+  height: 120%;
+  background: url('/seq/output_0001.webp') center/cover no-repeat;
+  filter: brightness(0.15) blur(12px);
+  z-index: 0;
+  pointer-events: none;
+  transform: translateZ(-1px) scale(1.2);
+  transition: transform 0.3s ease;
+}
+
+.gallery-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.03) 0%, transparent 80%),
+              radial-gradient(circle at 70% 70%, rgba(255,255,255,0.02) 0%, transparent 80%);
+  filter: blur(100px);
+  z-index: 1;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+/* ===== HERO SECTION ===== */
+.gallery-hero {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(80px, 10vw, 160px) clamp(20px, 6vw, 80px);
+  overflow: hidden;
+  z-index: 2;
+}
+
+.gallery-hero-content {
+  position: relative;
+  z-index: 10;
+  max-width: 900px;
+  text-align: center;
+}
+
+.gallery-hero-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 20px;
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.gallery-hero-title {
+  font-size: clamp(48px, 8vw, 88px);
+  font-weight: 900;
+  line-height: 1.1;
+  margin: 0 0 24px 0;
+  background: linear-gradient(135deg, #ffffff 0%, #888888 50%, #444444 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+
+.gallery-hero-description {
+  font-size: clamp(16px, 2.2vw, 22px);
+  line-height: 1.6;
+  color: #aaa;
+  max-width: 700px;
+  margin: 0 auto;
+  text-shadow: 0 0 6px rgba(255,255,255,0.05);
+}
+
+/* ===== FLOOR SECTIONS ===== */
+.floor-section {
+  position: relative;
+  padding: clamp(60px, 10vw, 140px) 0;
+  z-index: 2;
+  background: linear-gradient(180deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%);
+}
+
+.floor-container {
+  position: relative;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 clamp(40px, 6vw, 80px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(60px, 8vw, 120px);
+  align-items: center;
+  perspective: 1200px;
+}
+
+.floor-image-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 60vh;
+  min-height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: linear-gradient(145deg, #222 0%, #333 100%);
+  box-shadow: 0 12px 50px rgba(0,0,0,0.4);
+  transition: transform 0.6s ease, box-shadow 0.6s ease;
+}
+
+.floor-image-wrapper:hover {
+  transform: translateY(-6px) rotateX(1.5deg) rotateY(1.5deg);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.5);
+}
+
+.floor-content {
+  position: relative;
+  z-index: 2;
+}
+
+.floor-subtitle {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.floor-title {
+  font-size: clamp(32px, 5vw, 50px);
+  font-weight: 900;
+  line-height: 1.1;
+  margin: 0 0 20px 0;
+  color: #fff;
+}
+
+.floor-description {
+  font-size: clamp(15px, 1.9vw, 18px);
+  line-height: 1.7;
+  color: #aaa;
+  margin: 0 0 32px 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .floor-container { grid-template-columns: 1fr !important; gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  .floor-image-wrapper { height: 50vh; min-height: 300px; }
+  .floor-title { font-size: clamp(28px, 6vw, 42px); }
+}
+
+@media (max-width: 480px) {
+  .floor-image-wrapper { height: 40vh; min-height: 240px; }
+}

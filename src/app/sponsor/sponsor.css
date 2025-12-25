@@ -1,0 +1,140 @@
+.sponsor-logo-container {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.sponsor-logo {
+  max-width: 140px;
+  max-height: 80px;
+  filter: brightness(0) invert(1);
+}
+
+.sponsor-year {
+  font-size: 12px;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+/* УПРОЩЕННЫЙ CTA - только заголовок + кнопка */
+.sponsor-contact {
+  text-align: center;
+  padding: 60px 0;
+  margin-top: 80px;
+}
+
+.sponsor-contact__text {
+  margin-bottom: 32px;
+}
+
+.sponsor-contact__text h2 {
+  margin-bottom: 12px;
+}
+
+/* УБРАТЬ sponsor-contact__bullets - они не используются */
+
+@media (max-width: 900px) {
+  .sponsor-contact {
+    padding: 40px 20px;
+    margin-top: 60px;
+  }
+}
+
+
+/* 🔥 4. СТАТИСТИКА */
+.sponsors-stats {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-bottom: 40px;
+  padding: 20px 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, #f7d774, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* 🔥 3. БЕЙДЖИ УРОВНЕЙ */
+.sponsor-logo-container {
+  position: relative;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.tier-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  backdrop-filter: blur(20px);
+}
+
+.tier-title {
+  background: rgba(247, 215, 116, 0.9);
+  color: #181818;
+  box-shadow: 0 4px 20px rgba(247, 215, 116, 0.4);
+}
+
+.tier-official {
+  background: rgba(79, 70, 229, 0.9);
+  color: white;
+  box-shadow: 0 4px 20px rgba(79, 70, 229, 0.4);
+}
+
+.tier-sprint {
+  background: rgba(16, 185, 129, 0.9);
+  color: white;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+}
+
+/* GSAP улучшения для hover */
+.sponsor-card {
+  perspective: 1000px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+
+/* TITLE ПЕРЕД СТАТИСТИКОЙ */
+.sponsors-title-section {
+  text-align: center;
+  padding: 60px 0 40px;
+}
+
+.sponsors-main-title {
+  font-size: clamp(36px, 8vw, 58px);
+  font-weight: 800;
+  margin: 0 0 40px 0;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff, rgba(255,255,255,0.8));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}

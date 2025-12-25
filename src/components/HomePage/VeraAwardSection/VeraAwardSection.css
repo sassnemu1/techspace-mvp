@@ -1,0 +1,730 @@
+.vera-section {
+  position: relative;
+  background: linear-gradient(180deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%);
+  color: #fff;
+  /* display: flex; */
+  overflow: hidden;
+  padding: clamp(80px, 10vw, 140px) clamp(20px, 4vw, 60px);
+  z-index: 1;
+}
+
+.vera-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: clamp(60px, 8vw, 100px);
+  position: relative;
+  z-index: 2;
+}
+
+.vera-content {
+  position: relative;
+}
+
+.vera-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 20px;
+  padding: 8px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.vera-title {
+  font-size: clamp(40px, 6vw, 70px);
+  font-weight: 900;
+  line-height: 0.95;
+  margin: 0 0 24px 0;
+  background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vera-subtitle {
+  font-size: clamp(13px, 3vw, 21px);
+  line-height: 1.2;
+  letter-spacing: 1px;
+  color: #cbcbcb;
+  margin: 0 0 16px 0;
+}
+
+.vera-description {
+  font-size: clamp(11px, 2vw, 17px);
+  line-height: 1.6;
+  color: #bbb;
+  margin: 0 0 32px 0;
+  max-width: 600px;
+}
+
+/* Статистика */
+.vera-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 48px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.vera-stat-item {
+  text-align: center;
+}
+
+.vera-stat-number {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 900;
+  background: linear-gradient(135deg, #fff 0%, #888 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.vera-stat-label {
+  font-size: 13px;
+  color: #888;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Кнопки */
+.vera-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.vera-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.vera-button--primary {
+  background: linear-gradient(135deg, #fff 0%, #ddd 100%);
+  color: #000;
+}
+
+.vera-button--primary:hover {
+  background: linear-gradient(135deg, #fff 0%, #eee 100%);
+  transform: translateX(4px);
+}
+
+/* 3D Canvas */
+.vera-canvas-container {
+  position: relative;
+  max-width: 600px;
+  height: 600px;
+}
+
+.vera-canvas-wrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+}
+
+.vera-canvas-hint {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 30px;
+  font-size: 14px;
+  color: #aaa;
+  pointer-events: none;
+  animation: hintPulse 2s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .vera-container {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .vera-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .vera-canvas-container {
+    height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .vera-stats {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .vera-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .vera-canvas-container {
+    height: 400px;
+  }
+}
+
+
+.vera-section {
+  position: relative;
+  background: linear-gradient(180deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%);
+  color: #fff;
+  overflow: hidden;
+  padding: clamp(100px, 12vw, 160px) clamp(20px, 5vw, 80px);
+  z-index: 1;
+}
+
+.vera-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: clamp(60px, 8vw, 100px);
+  position: relative;
+  z-index: 2;
+}
+
+.vera-content {
+  position: relative;
+  z-index: 2;
+}
+
+.vera-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 20px;
+  padding: 8px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(255,255,255,0.1);
+  backdrop-filter: blur(6px);
+}
+
+.vera-title {
+  font-size: clamp(48px, 6vw, 80px);
+  font-weight: 900;
+  line-height: 0.95;
+  margin: 0 0 24px 0;
+  background: linear-gradient(135deg, #fff 0%, #aaa 50%, #888 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.vera-subtitle {
+  font-size: clamp(14px, 3vw, 22px);
+  line-height: 1.3;
+  letter-spacing: 1px;
+  color: #cbcbcb;
+  margin: 0 0 20px 0;
+}
+
+.vera-description {
+  font-size: clamp(12px, 2vw, 18px);
+  line-height: 1.6;
+  color: #bbb;
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+/* Статистика */
+.vera-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 48px;
+  padding: 24px 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.vera-stat-item {
+  text-align: center;
+  position: relative;
+}
+
+.vera-stat-number {
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 900;
+  background: linear-gradient(135deg, #fff 0%, #ccc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+.vera-stat-label {
+  font-size: 13px;
+  color: #888;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* 3D Canvas */
+.vera-canvas-container {
+  position: relative;
+  height: 650px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+}
+
+.vera-canvas-hint {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 36px;
+  font-size: 14px;
+  color: #aaa;
+  pointer-events: none;
+  animation: hintPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.7; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+}
+
+/* Плавающие элементы */
+.vera-floating {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  animation: float 25s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.vera-floating--1 { width: 120px; height: 120px; top: 10%; left: 5%; animation-delay: 0s; }
+.vera-floating--2 { width: 180px; height: 180px; bottom: 15%; right: 10%; animation-delay: -8s; }
+.vera-floating--3 { width: 80px; height: 80px; top: 50%; left: 60%; animation-delay: -12s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  33% { transform: translateY(-30px) translateX(20px); }
+  66% { transform: translateY(20px) translateX(-20px); }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .vera-container { grid-template-columns: 1fr; gap: 50px; }
+  .vera-stats { grid-template-columns: repeat(2, 1fr); }
+  .vera-canvas-container { height: 500px; }
+}
+
+@media (max-width: 768px) {
+  .vera-stats { grid-template-columns: 1fr; gap: 16px; }
+  .vera-canvas-container { height: 400px; }
+}
+
+
+.vera-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* немного более равномерно для текста и Canvas */
+  gap: clamp(40px, 6vw, 80px);
+  position: relative;
+  z-index: 2;
+  align-items: start; /* выравнивание текста по верху Canvas */
+}
+
+.vera-canvas-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px; /* ограничение ширины Canvas */
+  height: auto;
+  aspect-ratio: 1 / 1; /* квадратная область, масштабируется */
+  border-radius: 32px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+}
+
+/* Для текста */
+.vera-content {
+  max-width: 600px; /* ограничение по ширине */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .vera-container {
+    grid-template-columns: 1fr; /* текст над Canvas */
+    gap: 60px;
+  }
+
+  .vera-canvas-container {
+    width: 100%;
+    max-width: 100%;
+    height: 400px; /* фиксированная высота для планшетов */
+    aspect-ratio: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .vera-canvas-container {
+    height: 300px;
+  }
+}
+
+
+
+
+.vera-section {
+  position: relative;
+  background: radial-gradient(circle at top left, #181818 0%, #050505 55%, #000000 100%);
+  color: #f5f5f5;
+  overflow: hidden;
+  padding: clamp(96px, 12vw, 160px) clamp(24px, 5vw, 88px);
+  z-index: 1;
+}
+
+/* Фоновый слой как на Tech‑Space */
+.vera-background {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.vera-bg-gradient--1 {
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  top: -120px;
+  right: -120px;
+  background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 60%);
+  opacity: 0.18;
+}
+
+.vera-bg-gradient--2 {
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  bottom: -120px;
+  left: -80px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+  opacity: 0.18;
+}
+
+.vera-bg-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);
+  background-size: 18px 18px;
+  opacity: 0.15;
+}
+
+/* Сетка */
+.vera-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(56px, 7vw, 104px);
+  position: relative;
+  z-index: 1;
+  align-items: flex-start;
+}
+
+/* Левая колонка — «витрина» */
+.vera-canvas-shell {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.vera-canvas-frame {
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 3 / 4;
+  border-radius: 32px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #151515 0%, #050505 60%);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.9),
+    0 0 0 1px rgba(255,255,255,0.03);
+  position: relative;
+}
+
+.vera-canvas-frame canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+.vera-canvas-hint {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.9);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: #b0b0b0;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+  animation: veraHintPulse 2.6s ease-in-out infinite;
+}
+
+.vera-canvas-hint svg {
+  opacity: 0.8;
+}
+
+@keyframes veraHintPulse {
+  0%, 100% { opacity: 0.7; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 1; transform: translateX(-50%) translateY(-3px); }
+}
+
+/* Правая колонка — контент */
+.vera-content {
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Бейдж */
+.vera-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.14);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #f5f5f5;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+}
+
+.vera-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+/* Заголовок */
+.vera-title {
+  font-size: clamp(42px, 5vw, 72px);
+  font-weight: 900;
+  line-height: 0.95;
+  margin: 6px 0 10px;
+  background: linear-gradient(135deg, #ffffff 0%, #d3d3d3 40%, #8e8e8e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 18px rgba(0,0,0,0.6);
+}
+
+.vera-title-highlight {
+  letter-spacing: 0.02em;
+}
+
+/* Подзаголовок */
+.vera-subtitle {
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #b0b0b0;
+  margin: 0 0 12px;
+}
+
+/* Линия статистики */
+.vera-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  padding: 18px 0 22px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 10px;
+}
+
+.vera-stat-item {
+  text-align: left;
+}
+
+.vera-stat-number {
+  font-size: 24px;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #ffffff 0%, #bdbdbd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vera-stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #858585;
+  margin-top: 4px;
+}
+
+/* Вертикальная «лента» блоков */
+.vera-timeline {
+  position: relative;
+  display: flex;
+  margin-top: 8px;
+}
+
+.vera-timeline-line {
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.25) 0%,
+    rgba(255,255,255,0.1) 40%,
+    rgba(255,255,255,0) 100%
+  );
+  margin-right: 24px;
+}
+
+.vera-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.vera-block {
+  position: relative;
+}
+
+.vera-block-title {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #e0e0e0;
+  margin-bottom: 6px;
+}
+
+.vera-block p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #bdbdbd;
+  max-width: 560px;
+}
+
+.vera-block--accent {
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.vera-block--accent p {
+  color: #e5e5e5;
+}
+
+/* Адаптив */
+@media (max-width: 1100px) {
+  .vera-container {
+    grid-template-columns: 1fr;
+    gap: 56px;
+  }
+
+  .vera-canvas-shell {
+    order: -1;
+  }
+
+  .vera-canvas-frame {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .vera-section {
+    padding: 72px 20px 96px;
+  }
+
+  .vera-stats-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 18px;
+  }
+
+  .vera-timeline {
+    margin-top: 16px;
+  }
+
+  .vera-block p {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  .vera-stats-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .vera-canvas-frame {
+    aspect-ratio: 4 / 5;
+  }
+}

@@ -1,0 +1,456 @@
+/* Root Variables */
+:root {
+  --pad: clamp(16px, 3vw, 48px);
+  --vh: 1vh;
+}
+
+/* Global Reset */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font: 16px/1.5 system-ui, sans-serif;
+}
+
+/* ========== ОБЩИЕ СТИЛИ HERO ========== */
+.hero {
+  position: relative;
+  height: calc(var(--vh) * 100);
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Overlay для десктопа */
+.hero--desktop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(24, 24, 24, 0.492);
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* Overlay для мобилки */
+.hero--mobile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(24, 24, 24, 0.3);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ========== МОБИЛЬНАЯ ВЕРСИЯ ========== */
+.hero--mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: #000;
+}
+
+.hero__bg-mobile {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url('/seq/output_0001.webp') center/cover no-repeat;
+  filter: blur(5px);
+  opacity: 0.5;
+}
+
+.hero__bg-mobile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(34,34,34,0.5) 100%);
+  z-index: 1;
+}
+
+.hero__content-mobile {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  padding: 24px;
+  margin: 0 20px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hero__title-mobile {
+  font-family: "Tektur", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(48px, 12vw, 72px);
+  line-height: 1;
+  margin: 0 0 1rem;
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 50%, rgba(220,220,220,0.85) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
+}
+
+.hero__subtitle-mobile {
+  font-family: "Tektur", system-ui, sans-serif;
+  font-size: clamp(16px, 4vw, 20px);
+  line-height: 1.4;
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #ccc;
+}
+
+.hero__location-mobile {
+  font-size: clamp(14px, 3.5vw, 16px);
+  margin: 0 0 40px;
+  opacity: 0.9;
+  color: #888;
+  font-weight: 400;
+}
+
+/* Кнопки мобильные */
+.hero__buttons-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 40px;
+}
+
+.hero__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.hero__btn--primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+.hero__btn--primary:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+.hero__btn--secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.hero__btn--secondary:active {
+  transform: scale(0.98);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.hero__btn svg {
+  flex-shrink: 0;
+}
+
+/* ========== ДЕСКТОПНАЯ ВЕРСИЯ ========== */
+.hero--desktop {
+  display: none;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Canvas для секвенции */
+#heroCanvas,
+.hero__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Текстовый контейнер десктоп */
+.text-swap-container {
+  position: absolute;
+  bottom: clamp(100px, 10vh, 130px);
+  left: clamp(20px, 4vw, 80px);
+  z-index: 100;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Главный заголовок */
+.text-swap-container h1 {
+  font-family: "Tektur", system-ui, sans-serif;
+  position: relative;
+  font-weight: 900;
+  font-size: clamp(22px, 3vw, 60px);
+  line-height: 0.95;
+  width: auto;
+  max-width: 90vw;
+  margin: 0 0 clamp(8px, 1.5vh, 20px) 0;
+  padding: 0;
+  display: block;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: -0.03em;
+  text-shadow: 0 2px 20px rgba(255, 255, 255, 0.15);
+}
+
+/* Подзаголовки */
+.text-swap-container h3 {
+  font-family: "Tektur", system-ui, sans-serif;
+  position: relative;
+  font-weight: 600;
+  font-size: clamp(46px, 12vw, 102px);
+  line-height: 1.1;
+  width: auto;
+  max-width: 90vw;
+  margin: -6px 0 0 0;
+  padding: 0;
+  display: block;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: -0.01em;
+}
+
+/* Loader */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  color: #fff;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========== МЕДИА-ЗАПРОСЫ ========== */
+@media (max-width: 767px) {
+  .hero--desktop {
+    display: none !important;
+  }
+  .hero--mobile {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero--mobile {
+    display: none !important;
+  }
+  .hero--desktop {
+    display: block !important;
+  }
+}
+
+/* Адаптив для планшетов */
+@media (max-width: 1024px) {
+  .text-swap-container h1 {
+    font-size: clamp(56px, 10vw, 100px);
+  }
+  
+  .text-swap-container h3 {
+    font-size: clamp(28px, 5vw, 56px);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  #heroCanvas,
+  .hero__canvas {
+    display: none !important;
+  }
+  .hero__btn {
+    transition: none !important;
+  }
+}
+
+
+/* ========== HERO LITE ========== */
+.hero--lite {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero__bg-lite {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  filter: brightness(0.5); /* затемняем фон, чтобы текст был читаем */
+}
+
+.hero__content-lite {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 12px;
+}
+
+.hero__title {
+  font-family: "Tektur", system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(48px, 8vw, 96px);
+  line-height: 1.1;
+  margin: 0;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+}
+
+.hero__subtitle {
+  font-family: "Tektur", system-ui, sans-serif;
+  font-size: clamp(16px, 3vw, 24px);
+  color: #ccc;
+  margin: 0;
+}
+
+.hero__location {
+  font-size: clamp(14px, 2.5vw, 18px);
+  color: #aaa;
+  margin: 0;
+}
+
+.hero__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.hero__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hero__btn--primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.hero__btn--primary:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+.hero__btn--secondary {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(6px);
+}
+
+.hero__btn--secondary:active {
+  transform: scale(0.98);
+  background: rgba(255,255,255,0.15);
+}
+
+/* Loader для Lite Hero */
+.hero--lite .loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  color: #fff;
+}
+
+.hero--lite .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Адаптив Lite */
+@media (max-width: 768px) {
+  .hero__title {
+    font-size: clamp(36px, 10vw, 72px);
+  }
+  .hero__subtitle {
+    font-size: clamp(14px, 4vw, 20px);
+  }
+  .hero__location {
+    font-size: clamp(12px, 3.5vw, 16px);
+  }
+  .hero__buttons {
+    flex-direction: column;
+  }
+}
