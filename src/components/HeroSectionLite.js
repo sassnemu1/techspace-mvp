@@ -33,12 +33,12 @@ export default function HeroSectionLite() {
       />
 
       <div className="hero__content-lite">
-        <h1 className="hero__title">ART-Space</h1>
-        <p className="hero__subtitle">Международный выставочный комплекс</p>
-        <p className="hero__location">Тверская 9, Москва</p>
+        <h1 className="hero__title">Techspace</h1>
+        <p className="hero__subtitle">Инновационный Хаб на Тверской</p>
+        <p className="hero__location">Москва, Тверская 9</p>
         <div className="hero__buttons">
           <Link
-            href="https://tickets.art-space.world/#events"
+            href="#"
             className="hero__btn hero__btn--primary"
             target="_blank"
             rel="noopener noreferrer"

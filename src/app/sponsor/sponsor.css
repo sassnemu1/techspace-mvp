@@ -1,3 +1,13 @@
+.sponsor-page {
+  padding: 140px 40px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+  color: #f8f8f8;
+  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
+}
+
+
 .sponsor-logo-container {
   height: 100px;
   display: flex;

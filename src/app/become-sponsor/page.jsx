@@ -13,7 +13,7 @@ const Footer = dynamic(() => import('@/components/Footer/Footer'), {
 export default function BecomeSponsorPage() {
   return (
     <>
-      <section className="sponsor-page">
+      <section className="become-sponsor-page">
         {/* HERO С ФОНОМ ИЗОБРАЖЕНИЯ */}
         <div className="sponsor-hero">
           <div className="sponsor-hero__bg-overlay">
@@ -26,241 +26,341 @@ export default function BecomeSponsorPage() {
           
           <div className="sponsor-hero__content-overlay">
             <div className="sponsor-hero__content">
-              <p className="sponsor-hero__eyebrow">Для стратегических партнёров</p>
               <h1 className="sponsor-hero__title">
-                Стать Спонсором <span className="sponsor-hero__title-accent">Techspace</span>
+                Techspace  <span className="sponsor-hero__title-accent">Партнерство</span>
               </h1>
               <p className="sponsor-hero__subtitle">
-                Закрытая платформа для лидеров рынка, которые хотят войти в экосистему суверенных технологий
-                и получить прямой доступ к основателям, продуктам и живым демонстрациям.
+                Пространство для демонстрации технологий, тестирования гипотез и встреч с инвесторами. <br />Локация: Москва, 500 метров от Кремля
               </p>
 
               <div className="sponsor-hero__cta-row">
-                <Link href="#formats" className="sponsor-cta sponsor-cta--primary">
-                  Форматы партнёрства
+                <Link href="#concept" className="sponsor-cta sponsor-cta--primary">
+                  Концепция
                 </Link>
-                <Link href="#contact" className="sponsor-cta sponsor-cta--ghost">
-                  Связаться с командой
+                <Link href="#economics" className="sponsor-cta sponsor-cta--ghost">
+                  Экономика
                 </Link>
-              </div>
-
-              <div className="sponsor-hero__meta">
-                <div className="sponsor-hero__meta-item">
-                  <span className="sponsor-hero__meta-label">Аудитория</span>
-                  <span className="sponsor-hero__meta-value">C‑level, инвесторы, госструктуры</span>
-                </div>
-                <div className="sponsor-hero__meta-item">
-                  <span className="sponsor-hero__meta-label">Формат</span>
-                  <span className="sponsor-hero__meta-value">Живые демонстрации + закрытые сессии</span>
-                </div>
-                <div className="sponsor-hero__meta-item">
-                  <span className="sponsor-hero__meta-label">Фокус</span>
-                  <span className="sponsor-hero__meta-value">Носимые технологии, AR, индустриальные решения</span>
-                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Остальные секции остаются ТЕМ ЖЕ */}
-        {/* ЦЕННОСТЬ ДЛЯ СПОНСОРОВ */}
-        <section className="sponsor-section" id="value" style={{marginBottom: '120px'}}>
+        {/* КОНЦЕПЦИЯ */}
+        <section className="sponsor-section sponsor-section sponsor-section--1300" id="concept">
           <div className="sponsor-section__header">
-            <h2 className="sponsor-section__title">Почему брендам выгодно участвовать</h2>
+            <h2 className="sponsor-section__title">Концепция. Новая Выставочная Модель</h2>
             <p className="sponsor-section__subtitle">
-              Спонсорство — это не логотип на баннере, а роль соавтора технологической сцены.
-              Каждое интеграционное решение проектируется под задачи партнёра.
+              Традиционные выставки статичны. Мы создаем динамичный формат 7-дневных технологических спринтов.
             </p>
           </div>
 
           <div className="sponsor-grid sponsor-grid--3">
-            {/* ... контент тот же ... */}
             <div className="sponsor-card">
-              <h3 className="sponsor-card__title">Доступ к первым лицам</h3>
+              <h3 className="sponsor-card__title">Хаб ( Networking )</h3>
               <p className="sponsor-card__text">
-                Закрытые форматы с участием C‑level, инвесторов и представителей государства: ужины,
-                камерные презентации, приватные демо‑комнаты.
+                Вы получаете доступ к закрытому сообществу и профильным экспертам и инвесторам.
               </p>
             </div>
             <div className="sponsor-card">
-              <h3 className="sponsor-card__title">Живая демонстрация технологий</h3>
+              <h3 className="sponsor-card__title">Витрина ( Showroom )</h3>
               <p className="sponsor-card__text">
-                Интеграция бренда в сценарий: AR‑активации, product‑storytelling,
-                нативные появление в ключевых моментах вечера.
+                Вы показываете продукт реальному трафику на Тверской.
               </p>
             </div>
             <div className="sponsor-card">
-              <h3 className="sponsor-card__title">Сильный имидж и PR</h3>
+              <h3 className="sponsor-card__title">Полигон ( Testbed )</h3>
               <p className="sponsor-card__text">
-                Позиционирование бренда как партнёра суверенных технологий и новых носимых интерфейсов,
-                с фокусом на долгосрочную повестку.
+                Вы тестируете гипотезы и собираете обратную связь от пользователей.
               </p>
             </div>
           </div>
         </section>
 
-      {/* ФОРМАТЫ ПАРТНЁРСТВА */}
-      <section className="sponsor-section" id="formats">
-        <div className="sponsor-section__header sponsor-section__header--split">
-          <div>
-            <h2 className="sponsor-section__title">Форматы партнёрства</h2>
-            <p className="sponsor-section__subtitle">
-              Несколько уровней участия — от тайтл‑партнёра гала‑ужина до точечной интеграции
-              в AR‑сценарий и спонсорства отдельных спринтов.
+        {/* ЭКОНОМИКА ПАРТНЁРСТВА */}
+        <section className="sponsor-section sponsor-section--economics sponsor-section--1300" id="economics">
+          <div className="sponsor-section__header">
+            <h2 className="sponsor-section__title">Экономика партнерства <span className="sponsor-hero__title-accent">(Ценность ROI)</span></h2>
+          </div>
+
+          <div className="sponsor-grid sponsor-grid--economics">
+            <div className="economics-item">
+              <div className="economics-number">100 <span className="economics-unit">млн ₽</span></div>
+              <div className="economics-label">Рыночная стоимость</div>
+              <p className="economics-text">
+                Аналогичный набор активов (Наружная реклама на Тверской + Стенд и Спикерство в Манеже + Федеральный PR)
+              </p>
+            </div>
+
+            <div className="economics-item economics-item--advantage">
+              <div className="economics-number">30 <span className="economics-unit">млн ₽</span></div>
+              <div className="economics-label">Ваше преимущество</div>
+              <p className="economics-text">
+                Цена входа сейчас - скидка 70%. Партнеры-основатели на этапе запуска
+              </p>
+            </div>
+
+            <div className="economics-item">
+              <div className="economics-number">+40%</div>
+              <div className="economics-label">Рост стоимости</div>
+              <p className="economics-text">
+                После открытия (26 февраля 2026) стоимость контрактов будет пересмотрена
+              </p>
+            </div>
+          </div>
+
+          <div className="sponsor-cta-group economics-cta">
+            <Link href="#tiers" className="sponsor-cta sponsor-cta--primary sponsor-cta--large">
+              Забронировать место по пре-цене
+            </Link>
+            <p className="sponsor-cta-group__note">
+              Лимитированные слоты для основателей
             </p>
           </div>
-          <div className="sponsor-section__note">
-            <p>
-              Детальная структура пакетов, стоимость и технические требования доступны в закрытом досье
-              для потенциальных партнёров.
+        </section>
+
+        {/* СТРАТЕГИЧЕСКОЕ ПАРТНЕРСТВО - УЛУЧШЕННАЯ СЕКЦИЯ */}
+<section className="sponsor-section sponsor-section--partnership sponsor-section--1300" id="partnership">
+  <div className="partnership-container">
+    {/* ГЛАВНЫЙ ЗАГОЛОВОК */}
+    <div className="partnership-header">
+      <h2 className="partnership-title">
+        TECHSPACE MOSCOW
+        <span className="partnership-accent">СТРАТЕГИЧЕСКОЕ ПАРТНЕРСТВО 2026</span>
+      </h2>
+      <p className="partnership-subtitle">
+        Интеграция бренда в Акселерационный выставочный комплекс в самом сердце столицы
+      </p>
+    </div>
+
+    {/* PROBLEM-SOLUTION БЛОК */}
+    <div className="partnership-problem-solution">
+      <div className="problem-solution-card">
+        <div className="ps-header">
+          <h3 className="ps-title">ДОМИНИРОВАНИЕ В ЦЕНТРЕ МОСКВЫ</h3>
+        </div>
+        
+        <div className="ps-content">
+          <div className="ps-item">
+            <span className="ps-label">Контекст</span>
+            <p className="ps-text">
+              Тверская 9 — локация с трафиком <strong>500 000+</strong> целевых посетителей в год 
+              и <strong>3млн+</strong> визуальных контактов ежемесячно. 500м от Кремля.
+            </p>
+          </div>
+
+          <div className="ps-item ps-item--problem">
+            <span className="ps-label ps-label--problem">Проблема</span>
+            <p className="ps-text">
+              В историческом центре запрещена статичная наружная реклама. Бренды не могут заявить о себе.
+            </p>
+          </div>
+
+          <div className="ps-item ps-item--solution">
+            <span className="ps-label ps-label--solution">Решение</span>
+            <p className="ps-text">
+              Techspace управляет <strong>единственным легальным программируемым медиафасадом</strong> 
+              на "Золотой миле" (<strong>12 витрин</strong>).
             </p>
           </div>
         </div>
+      </div>
 
-        <div className="sponsor-grid sponsor-grid--3">
-          <div className="sponsor-tier">
-            <p className="sponsor-tier__badge">Премиум</p>
-            <h3 className="sponsor-tier__title">Title‑партнёр</h3>
-            <p className="sponsor-tier__desc">
-              Максимальная видимость бренда во всех точках контакта: вечер, AR‑слой, коммуникация до и после события.
-            </p>
-            <ul className="sponsor-tier__list">
-              <li>Брендинг ключевых зон и AR‑сцен</li>
-              <li>Выделенный блок в основном сценарии вечера</li>
-              <li>Приоритетный доступ к встречам с основателями</li>
-            </ul>
-          </div>
-
-          <div className="sponsor-tier sponsor-tier--accent">
-            <p className="sponsor-tier__badge">Рекомендуем</p>
-            <h3 className="sponsor-tier__title">Официальный спонсор</h3>
-            <p className="sponsor-tier__desc">
-              Сбалансированный пакет для брендов, которые хотят быть внутри повестки и при этом
-              сохранить фокус на конкретных продуктах.
-            </p>
-            <ul className="sponsor-tier__list">
-              <li>Брендинг отдельных зон и digital‑носителей</li>
-              <li>Нативные интеграции в AR‑опыт гостей</li>
-              <li>Квота на приглашения и приватные встречи</li>
-            </ul>
-          </div>
-
-          <div className="sponsor-tier">
-            <p className="sponsor-tier__badge">Точечная интеграция</p>
-            <h3 className="sponsor-tier__title">Партнёр спринта</h3>
-            <p className="sponsor-tier__desc">
-              Участие в рамках конкретного 7‑дневного спринта или отдельного блока программы.
-            </p>
-            <ul className="sponsor-tier__list">
-              <li>Брендинг спринта и коммуникации внутри недели</li>
-              <li>Совместные активности с командами и менторами</li>
-              <li>Гибкая кастомизация под задачи партнёра</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* ПРОФИЛЬ АУДИТОРИИ + ВИЗУАЛ */}
-      <section className="sponsor-section sponsor-section--inverse">
-        <div className="sponsor-section__header">
-          <h2 className="sponsor-section__title">Кого вы встретите на площадке</h2>
-          <p className="sponsor-section__subtitle">
-            Аудитория отбирается вручную: участники, для которых инновации — не презентация,
-            а рабочий инструмент и предмет стратегических решений.
+      {/* ПРЕДЛОЖЕНИЕ */}
+      <div className="partnership-offer">
+        <div className="offer-card">
+          <h3 className="offer-title">Предложение</h3>
+          <p className="offer-text">
+            Не покупка рекламного времени, а <strong>стратегическое партнерство</strong>, 
+            интегрирующее бренд в архитектуру города и федеральную технологическую повестку.
           </p>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <div className="sponsor-audience">
-          <div className="sponsor-audience__list">
-            <div className="sponsor-audience__item">
-              <span className="sponsor-audience__label">Инвесторы</span>
-              <p className="sponsor-audience__text">
-                Фонды и частные инвесторы с фокусом на deep‑tech, hardware и инфраструктурные решения.
+
+        {/* СИСТЕМА GATEKEEPER */}
+        <section className="sponsor-section sponsor-section--1300" id="gatekeeper">
+          <div className="sponsor-section__header">
+            <h2 className="sponsor-section__title">Доступ к рекламному инвентарю</h2>
+            <p className="sponsor-section__subtitle sponsor-section__subtitle--accent">
+              <strong>Система "Gatekeeper"</strong> — уникальное преимущество держателей годовых пакетов
+            </p>
+          </div>
+
+          <div className="sponsor-grid sponsor-grid--2">
+            <div className="sponsor-card sponsor-card--feature">
+              <div className="feature-lock">
+                {/* <span className="feature-lock__icon">🔒</span> */}
+                <h3 className="feature-lock__title">Правило Gatekeeper</h3>
+              </div>
+              <p className="sponsor-card__text sponsor-card__text--large">
+                Внешние бренды <strong>не могут купить рекламу на фасаде "с улицы"</strong>. Доступ к инвентарю имеют <strong>только держатели годовых пакетов</strong>.
               </p>
             </div>
-            <div className="sponsor-audience__item">
-              <span className="sponsor-audience__label">Бизнес</span>
-              <p className="sponsor-audience__text">
-                Корпорации, ищущие партнёров для пилотов, внедрения и совместных R&amp;D‑проектов.
+
+            <div className="sponsor-card sponsor-card--feature">
+              <div className="feature-marketplace">
+                {/* <span className="feature-marketplace__icon">🛒</span> */}
+                <h3 className="feature-marketplace__title">Закрытый маркетплейс</h3>
+              </div>
+              <p className="sponsor-card__text sponsor-card__text--large">
+                Партнеры могут докупать дополнительные слоты (Spot Buys) для поддержки своих запусков:
               </p>
+              <ul className="feature-list">
+                <li><strong>Pulse (10 секунд)</strong> — короткие вспышки для анонсов</li>
+                <li><strong>Store (30 секунд)</strong> — стандартные рекламные ролики</li>
+                <li><strong>Takeover (24 часа)</strong> — полное доминирование экрана</li>
+              </ul>
             </div>
-            <div className="sponsor-audience__item">
-              <span className="sponsor-audience__label">Госструктуры</span>
-              <p className="sponsor-audience__text">
-                Представители госорганов, отвечающие за цифровую трансформацию и технологический суверенитет.
+          </div>
+
+          <div className="sponsor-grid sponsor-grid--1">
+            <div className="sponsor-card sponsor-card--protocol">
+              <div className="feature-protocol">
+                {/* <span className="feature-protocol__icon">🖥️</span> */}
+                <h3 className="feature-protocol__title">Протокол Чистого Экрана</h3>
+              </div>
+              <p className="sponsor-card__text sponsor-card__text--large">
+                В момент платного показа <strong>Футер (нижняя плашка с логотипами) полностью скрывается</strong>, отдавая бренду <strong>100% площади экрана</strong> для максимального воздействия.
               </p>
             </div>
           </div>
 
-          <div className="sponsor-audience__visual">
-            <div className="sponsor-audience__glass">
-              <img
-                src="https://images.pexels.com/photos/155907/pexels-photo-155907.jpeg"
-                alt="Stage and audience"
-                className="sponsor-audience__image"
-              />
-              <div className="sponsor-audience__tag">Живые демонстрации · AR · Манеж</div>
-            </div>
+          <div className="sponsor-cta-group">
+            <Link href="#tiers" className="sponsor-cta sponsor-cta--primary sponsor-cta--large">
+              Получить доступ к инвентарю
+            </Link>
+            <p className="sponsor-cta-group__note">
+              Эксклюзивно для держателей пакетов Титан, Медиум, Смолл
+            </p>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* КОНТАКТ / CTA */}
-      <section className="sponsor-section" id="contact">
-        <div className="sponsor-contact">
-          <div className="sponsor-contact__text">
-            <h2 className="sponsor-section__title">Получить спонсорское досье</h2>
+        {/* ПАКЕТЫ ПАРТНЁРСТВА */}
+        <section className="sponsor-section sponsor-section--inverse" id="tiers">
+          <div className="sponsor-section__header">
+            <h2 className="sponsor-section__title">Пакеты партнёрства 2026</h2>
             <p className="sponsor-section__subtitle">
-              Оставьте контакты, и команда вышлет актуальное досье по формату, пакетам спонсорства
-              и доступным интеграциям, а также предложит слот для личного созвона.
+              Три уровня участия с чёткой иерархией, эксклюзивностью и гарантированной отдачей
             </p>
-            <ul className="sponsor-contact__bullets">
-              <li>PDF‑презентация форматов и сценариев интеграции</li>
-              <li>Актуальные даты, квоты и условия участия</li>
-              <li>Возможность кастомизации пакета под ваши задачи</li>
-            </ul>
           </div>
 
-          <form className="sponsor-contact__form">
-            <div className="sponsor-form__row">
-              <div className="sponsor-form__field">
-                <label>Имя и компания</label>
-                <input type="text" placeholder="Например: Анна, TechCorp" />
+          <div className="sponsor-grid sponsor-grid--3">
+            {/* ТИТАН Tier 1 */}
+            <div className="sponsor-tier sponsor-tier--titan">
+              <p className="sponsor-tier__badge sponsor-tier__badge--premium">🏆 Генеральный партнёр</p>
+              <h3 className="sponsor-tier__title">Пакет "Титан" (Tier 1)</h3>
+              <div className="sponsor-tier__price">30 000 000 ₽/год</div>
+              <div className="sponsor-tier__limit">Лимит: <strong>2 партнёра</strong></div>
+
+              <ul className="sponsor-tier__list">
+                <li><strong>Федеральный PR (20 февраля):</strong> Включение бренда в заголовок официального пресс-релиза ТАСС об открытии хаба</li>
+                <li><strong>Медиа-фасад (24/7):</strong> Футер: Логотип заблокирован в центральной позиции на всех окнах (поверх любого контента). Гарантированный слот: 30-секундный полноэкранный ролик каждые 10 минут (Футер скрывается)</li>
+                <li><strong>Манеж (25 ноября):</strong> Эксклюзивный стенд 50 м² ("Компактный остров"). Статус Keynote-спикера на церемонии открытия</li>
+                <li><strong>Эксклюзив:</strong> Блокировка товарной категории (конкуренты не смогут стать партнёрами)</li>
+              </ul>
+
+              <Link href="#contact" className="sponsor-cta sponsor-cta--primary sponsor-cta--full">
+                Стать Титаном
+              </Link>
+            </div>
+
+            {/* МЕДИУМ Tier 2 */}
+            <div className="sponsor-tier sponsor-tier--medium">
+              <p className="sponsor-tier__badge sponsor-tier__badge--recommended">⭐ Стратегический партнёр</p>
+              <h3 className="sponsor-tier__title">Пакет "Медиум" (Tier 2)</h3>
+              <div className="sponsor-tier__price">20 000 000 ₽/год</div>
+              <div className="sponsor-tier__limit">Лимит: <strong>4 партнёра</strong></div>
+
+              <ul className="sponsor-tier__list">
+                <li><strong>Манеж (25 ноября):</strong> Стенд 25 м² ("Якорный угол") в зоне высокого трафика, участие в панельной дискуссии</li>
+                <li><strong>Медиа-фасад:</strong> Футер: Вторичная позиция логотипа (слева/справа) с постоянной видимостью. Гарантированный слот: 15-секундный полноэкранный ролик каждые 10 минут</li>
+                <li><strong>Присутствие в хабе:</strong> Возможность брендирования зоны Акселератора (20 м²) на 3-м этаже в профильные недели</li>
+              </ul>
+
+              <Link href="#contact" className="sponsor-cta sponsor-cta--primary sponsor-cta--full">
+                Выбрать Медиум
+              </Link>
+            </div>
+
+            {/* СМОЛЛ Tier 3 */}
+            <div className="sponsor-tier">
+              <p className="sponsor-tier__badge">⚡ Инновационный партнёр</p>
+              <h3 className="sponsor-tier__title">Пакет "Смолл" (Tier 3)</h3>
+              <div className="sponsor-tier__price">10 000 000 ₽/год</div>
+              <div className="sponsor-tier__limit">Лимит: <strong>6 партнёров</strong></div>
+
+              <ul className="sponsor-tier__list">
+                <li><strong>Манеж (25 ноября):</strong> Стенд 10 м² ("Стандарт") в инновационном ряду</li>
+                <li><strong>Медиа-фасад:</strong> Футер: Логотип в нижней полосе (третичная позиция). Гарантированный слот: 10-секундный полноэкранный ролик каждые 10 минут</li>
+                <li><strong>Статус:</strong> Официальное упоминание как Инновационного партнёра на сайте и в материалах</li>
+              </ul>
+
+              <Link href="#contact" className="sponsor-cta sponsor-cta--primary sponsor-cta--full">
+                Подробнее
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* КОНТАКТ / CTA */}
+        <section className="sponsor-section sponsor-section--1300" id="contact">
+          <div className="sponsor-contact sponsor-contact--modern">
+            <div className="sponsor-contact__text">
+              <h2 className="sponsor-section__title">Получить спонсорское досье</h2>
+              <p className="sponsor-section__subtitle">
+                Оставьте контакты, и команда вышлет актуальное досье по формату, пакетам спонсорства
+                и доступным интеграциям, а также предложит слот для личного созвона.
+              </p>
+              <ul className="sponsor-contact__bullets">
+                <li>PDF‑презентация форматов и сценариев интеграции</li>
+                <li>Актуальные даты, квоты и условия участия</li>
+                <li>Возможность кастомизации пакета под ваши задачи</li>
+              </ul>
+            </div>
+
+            <form className="sponsor-contact__form sponsor-contact__form--modern">
+              <div className="sponsor-form__row">
+                <div className="sponsor-form__field">
+                  <label>Имя и компания</label>
+                  <input type="text" placeholder="Например: Анна, TechCorp" />
+                </div>
+                <div className="sponsor-form__field">
+                  <label>Рабочая почта</label>
+                  <input type="email" placeholder="name@company.com" />
+                </div>
               </div>
+
               <div className="sponsor-form__field">
-                <label>Рабочая почта</label>
-                <input type="email" placeholder="name@company.com" />
+                <label>Роль / интерес</label>
+                <input type="text" placeholder="Инвестор, партнёр, корпорация, медиа..." />
               </div>
-            </div>
 
-            <div className="sponsor-form__field">
-              <label>Роль / интерес</label>
-              <input type="text" placeholder="Инвестор, партнёр, корпорация, медиа..." />
-            </div>
+              <div className="sponsor-form__field">
+                <label>Комментарий</label>
+                <textarea
+                  rows={3}
+                  placeholder="Кратко опишите задачи, которые вы хотите решить через участие."
+                />
+              </div>
 
-            <div className="sponsor-form__field">
-              <label>Комментарий</label>
-              <textarea
-                rows={3}
-                placeholder="Кратко опишите задачи, которые вы хотите решить через участие."
-              />
-            </div>
+              <button type="submit" className="sponsor-cta sponsor-cta--primary sponsor-cta--full sponsor-cta--modern">
+                Отправить запрос на партнёрство
+              </button>
 
-            <button type="submit" className="sponsor-cta sponsor-cta--primary sponsor-cta--full">
-              Отправить запрос на партнёрство
-            </button>
+              <p className="sponsor-form__hint">
+                Отправляя форму, вы подтверждаете согласие на обработку данных и получение
+                информационных материалов о мероприятии.
+              </p>
+            </form>
+          </div>
+        </section>
 
-            <p className="sponsor-form__hint">
-              Отправляя форму, вы подтверждаете согласие на обработку данных и получение
-              информационных материалов о мероприятии.
-            </p>
-          </form>
-        </div>
       </section>
-    </section>
 
-    <Footer />
-
+      <Footer />
     </>
   );
 }

@@ -29,7 +29,7 @@ export default function HeroAdaptive() {
         requestAnimationFrame(testFPS);
       } else {
         const fps = frames;
-        setIsPowerful(strong || fps > 40);
+        setIsPowerful(strong || fps > 30);
       }
     };
 
@@ -38,5 +38,5 @@ export default function HeroAdaptive() {
 
   if (isPowerful === null) return null;
 
-  return isPowerful ? <HeroSection frameCount={data.frameCount} /> : <HeroSectionLite />;
+  return isPowerful ? <HeroSection frameCount={data.frameCount} /> : <HeroSection frameCount={data.frameCount} />;
 }

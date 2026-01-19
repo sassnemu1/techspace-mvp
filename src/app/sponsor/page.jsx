@@ -19,8 +19,8 @@ const sponsorsData = [
   { name: 'Сбер', logo: '/logos/sber.png', tier: 'official', year: 2025 },
   { name: 'VK', logo: '/logos/vk.png', tier: 'sprint', year: 2025 },
   { name: 'Ростелеком', logo: '/logos/rostel.png', tier: 'title', year: 2025 },
-  { name: 'Газпромбанк', logo: '/logos/yandex.png', tier: 'official', year: 2025 },
-  { name: 'МТС', logo: '/logos/sber.png', tier: 'sprint', year: 2025 },
+  { name: 'Газпромбанк', logo: '/logos/gazprom.svg', tier: 'official', year: 2025 },
+  { name: 'МТС', logo: '/logos/mts.svg', tier: 'sprint', year: 2025 },
 ];
 
 export default function SponsorsPage() {
@@ -108,7 +108,7 @@ export default function SponsorsPage() {
         <section className="sponsor-section">
           <div className="sponsor-contact">
             <div className="sponsor-contact__text">
-              <h2 className="sponsor-section__title">Стать партнёром Techspace</h2>
+              <h2 className="sponsor-section__title">Стать спонсором Techspace</h2>
             </div>
             <Link href="/become-sponsor" className="sponsor-cta sponsor-cta--primary sponsor-cta--full">
               Стать спонсором

@@ -7,9 +7,6 @@ import Link from "next/link";
 import MenuButton from "./MenuButton";
 import MenuOverlay from "./MenuOverlay";
 
-
-
-
 import { useMenuControl } from "../../../hooks/useMenuControl";
 
 import './MobileMenu.css';
