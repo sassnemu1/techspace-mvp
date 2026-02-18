@@ -8,101 +8,27 @@ import Footer from '@/components/Footer/Footer';
 import './events.css';
 import Head from "next/head";
 
-// export const metadata = {
-//   title: "Афиша событий — ART SPACE, Москва",
-//   description: "Выставки, лекции и конференции в ART SPACE, Тверская 9, Москва.",
-//   keywords: [
-//     "афиша ART SPACE",
-//     "выставки Москва",
-//     "мероприятия ART SPACE",
-//     "современное искусство Москва",
-//   ],
-//   openGraph: {
-//     title: "Афиша событий — ART SPACE",
-//     description: "Выставки, лекции и конференции в ART SPACE, Москва.",
-//     url: "https://art-space.site/events",
-//     images: [{ url: "https://art-space.site/og-events.jpg" }],
-//   },
-// };
-
 export default function EventsPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const exhibitions = [
-    {
-      id: 1,
-      type: 'exhibition',
-      title: "Капитан Кусто в России",
-      date: "24 октября - 30 ноября 2025",
-      shortDate: "24.10 - 30.11",
-      description: "Впервые в России — экспонаты из семейной коллекции Франсин Кусто (Франция). Уникальная возможность увидеть предметы из легендарных экспедиций.",
-      image: "/exhibitions/kusto-v-rossii.webp",
-      highlights: [
-        "Предметы из легендарных экспедиций команды Кусто",
-        "Изобретения великого исследователя",
-        "Редкие фотографии и картины, написанные под водой"
-      ],
-      category: "Выставка",
-      link: '/events/kusto'
-    },
-    {
-      id: 2,
-      type: 'exhibition',
-      title: "AI SUMMIT Creative",
-      date: "30 октября – 6 ноября 2025",
-      shortDate: "30.10 - 6.11",
-      description: "Весь комплекс МВК Art-Space трансформируется в иммерсивное путешествие по миру искусственного интеллекта. Каждый этаж — отдельная тема.",
-      image: "/exhibitions/ai-summit.webp",
-      highlights: [
-        "Лекции и мастер-классы с ведущими экспертами",
-        "Интеграция флагманских продуктов от tech-компаний",
-        "VR/AR Лаборатория и 3D-печать в реальном времени"
-      ],
-      category: "Выставка",
-      link: '/events/ai-summit'
-    },
-    {
-      id: 3,
-      type: 'exhibition',
-      title: "Три Востока",
-      date: "20 ноября – 6 декабря 2025",
-      shortDate: "20.11 - 6.12",
-      description: "Путешествие по культурным традициям трех великих цивилизаций: Китая, Японии и Индии. Философия, искусство и созерцание.",
-      image: "/exhibitions/tri-vostoka.webp",
-      highlights: [
-        "Восточные философии и поиск гармонии",
-        "Каллиграфия как медитативная практика",
-        "Минимализм и созерцательные пространства"
-      ],
-      category: "Выставка",
-      link: '/events/tri-vostoka'
-    }
+    
   ];
 
   const events = [
     {
-      id: 4,
+      id: 1,
       type: 'event',
-      title: "Кино и фотография как язык общения с миром",
-      date: "28 октября 2025, 19:00",
-      shortDate: "28.10, 19:00",
-      description: "Лекция в рамках выставки, посвященной Жаку-Иву Кусто. Бесплатный вход с регистрацией.",
-      image: "/assets/news/news-2.webp",
-      category: "Лекция",
-      link: '/events/lecture-kino-foto'
+      title: "TECHSPACE: ARTIFICIAL INTELLIGENCE",
+      date: "26 февраля 2026",
+      shortDate: "26 февраля 2026 - 4 марта 2026",
+      description: "Это официальный старт работы TechSpace - момент, когда внимание Правительства, федеральных СМИ и титатов индустрии будет максимальным.",
+      image: "/assets/become-sponsor.webp",
+      category: "Неделя Событий",
+      link: '/events/techspace-artificial-intelligence'
     },
-    {
-      id: 5,
-      type: 'event',
-      title: "In Pulse ИИ Автоматизации",
-      date: "6 ноября 2025, 18:00",
-      shortDate: "6.11, 18:00",
-      description: "Конференция для тех, кто внедряет ИИ, экономит бюджеты и развивает бизнес. Практические кейсы и нетворкинг.",
-      image: "/assets/news/news-3.webp",
-      category: "Конференция",
-      link: '/events/in-pulse-ai'
-    },
+
   ];
 
   const allItems = [...exhibitions, ...events].sort((a, b) => 
@@ -146,7 +72,7 @@ export default function EventsPage() {
   return (
     <>
     <Head>
-      <title>Афиша событий — ART SPACE, Москва</title>
+      {/* <title>Афиша событий — Tech Space, Москва</title>
         <meta
           name="description"
           content="Афиша выставок, лекций и конференций в ART SPACE, Тверская 9, Москва. Узнайте обо всех мероприятиях современного искусства."
@@ -163,10 +89,10 @@ export default function EventsPage() {
             лекции ART SPACE, 
             конференции ART SPACE
           "
-        />
+        /> */}
 
         {/* JSON-LD */}
-        <script
+        {/* <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -192,7 +118,7 @@ export default function EventsPage() {
               url: "https://art-space.site"
             }
           })}}
-        />
+        /> */}
     </Head>
     
     <main className="events-page">
@@ -202,10 +128,10 @@ export default function EventsPage() {
         <div className="events-hero-content">
           <span className="events-hero-badge">Афиша</span>
           <h1 className="events-hero-title">
-            События ART-Space
+            События TechSpace
           </h1>
           <p className="events-hero-subtitle">
-            Выставки, лекции и мастер-классы в культурно-технологическом пространстве
+            Выставки, лекции и мероприятия в культурно-технологическом пространстве
           </p>
         </div>
       </section>

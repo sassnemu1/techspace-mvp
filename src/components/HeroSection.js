@@ -8,65 +8,46 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function HeroSection({
-  frameCount = 180,
-  mobileFrameCount = 90,
-}) {
-  /* ---------------- refs ---------------- */
+export default function HeroSection({ frameCount }) {
+  const sectionRef = useRef(null);
+  const canvasRef = useRef(null);
+  const contextRef = useRef(null);
 
-  const desktopSectionRef = useRef(null);
-  const desktopCanvasRef = useRef(null);
-  const desktopCtxRef = useRef(null);
-  const desktopCache = useRef({});
+  const imageCache = useRef({});
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [firstFrameLoaded, setFirstFrameLoaded] = useState(false);
 
-  const mobileSectionRef = useRef(null);
-  const mobileCanvasRef = useRef(null);
-  const mobileCtxRef = useRef(null);
-  const mobileCache = useRef({});
+  const currentFrame = useCallback(
+    (index) => `/seq/output_${String(index).padStart(4, "0")}.webp`,
+    []
+  );
 
-  /* ---------------- state ---------------- */
-
-  const [desktopReady, setDesktopReady] = useState(false);
-  const [mobileReady, setMobileReady] = useState(false);
-
-  /* ---------------- utils ---------------- */
-
-  const isMobile = () => window.innerWidth < 768;
-
-  const frameSrc = (i) =>
-    `/seq/output_${String(i).padStart(4, "0")}.webp`;
-
-  const frameSrcMobile = (i) =>
-    `/mobile-video/output_${String(i).padStart(4, "0")}.jpg`;
-
-  const setupCanvas = (canvas, ctxRef) => {
+  const setCanvasSize = useCallback(() => {
+    const canvas = canvasRef.current;
     if (!canvas) return;
 
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     canvas.width = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
 
-    const ctx = canvas.getContext("2d", {
-      alpha: false,
-      desynchronized: true,
-    });
+    const context = canvas.getContext("2d", { alpha: false, desynchronized: true });
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    contextRef.current = context;
+  }, []);
 
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctxRef.current = ctx;
-  };
-
-  const drawFrame = (img, canvas, ctx) => {
-    if (!img || !canvas || !ctx) return;
+  const drawImage = useCallback((img) => {
+    const canvas = canvasRef.current;
+    const context = contextRef.current;
+    if (!canvas || !context || !img) return;
 
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-
+    const canvasRatio = vw / vh;
     const imgRatio = img.width / img.height;
-    const screenRatio = vw / vh;
 
     let dw, dh, dx, dy;
 
-    if (imgRatio > screenRatio) {
+    if (imgRatio > canvasRatio) {
       dh = vh;
       dw = dh * imgRatio;
       dx = (vw - dw) / 2;
@@ -78,210 +59,105 @@ export default function HeroSection({
       dy = (vh - dh) / 2;
     }
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, dx, dy, dw, dh);
-  };
-
-  const preload = (count, getSrc, cache, onDone) => {
-    let loaded = 0;
-
-    for (let i = 1; i <= count; i++) {
-      const img = new Image();
-      img.onload = () => {
-        cache.current[i] = img;
-        loaded++;
-        if (loaded === count) onDone();
-      };
-      img.src = getSrc(i);
-    }
-  };
-
-  /* ================= DESKTOP ================= */
-
-  useEffect(() => {
-    if (typeof window === "undefined" || isMobile()) return;
-
-    setupCanvas(desktopCanvasRef.current, desktopCtxRef);
-
-    preload(frameCount, frameSrc, desktopCache, () => {
-      drawFrame(
-        desktopCache.current[1],
-        desktopCanvasRef.current,
-        desktopCtxRef.current
-      );
-      setDesktopReady(true);
-    });
-
-    window.addEventListener("resize", () =>
-      setupCanvas(desktopCanvasRef.current, desktopCtxRef)
-    );
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(img, dx, dy, dw, dh);
   }, []);
 
-  useGSAP(() => {
-    // if (!desktopReady || isMobile()) return;
+  const preloadImages = useCallback(() => {
+    let loadedCount = 0;
+    const firstImg = new Image();
+    firstImg.onload = () => {
+      imageCache.current[1] = firstImg;
+      setFirstFrameLoaded(true);
+      drawImage(firstImg);
+      loadedCount++;
 
+      // ленивое предзагрузка остальных кадров
+      for (let i = 2; i <= frameCount; i++) {
+        const img = new Image();
+        img.onload = () => {
+          imageCache.current[i] = img;
+          loadedCount++;
+          if (loadedCount === frameCount) setIsLoaded(true);
+        };
+        img.src = currentFrame(i);
+      }
+    };
+    firstImg.src = currentFrame(1);
+  }, [frameCount, currentFrame, drawImage]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || window.innerWidth < 768) return;
+
+    setCanvasSize();
+    preloadImages();
+    window.addEventListener("resize", setCanvasSize);
+    return () => window.removeEventListener("resize", setCanvasSize);
+  }, [setCanvasSize, preloadImages]);
+
+  useGSAP(() => {
+    if (!isLoaded || typeof window === "undefined") return;
+
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const scrollLength = "+=1800vh";
     let lastFrame = 1;
 
     ScrollTrigger.create({
-      trigger: desktopSectionRef.current,
+      trigger: section,
       start: "top top",
-      end: "+=800vh",
+      end: scrollLength,
       pin: true,
-      scrub: 0.5,
       anticipatePin: 1,
-
-      onUpdate: (self) => {
-        const frame = Math.round(
-          1 + self.progress * (frameCount - 1)
-        );
-
-        if (
-          frame !== lastFrame &&
-          desktopCache.current[frame]
-        ) {
-          requestAnimationFrame(() =>
-            drawFrame(
-              desktopCache.current[frame],
-              desktopCanvasRef.current,
-              desktopCtxRef.current
-            )
-          );
-          lastFrame = frame;
-        }
-      },
-    });
-
-    ScrollTrigger.create({
-      trigger: mobileSectionRef.current,
-      start: "top top",
-      end: "+=800vh",
-      pin: true,
       scrub: 0.5,
-      anticipatePin: 1,
-
       onUpdate: (self) => {
-        const frame = Math.round(
-          1 + self.progress * (frameCount - 1)
-        );
-
-        if (
-          frame !== lastFrame &&
-          mobileCache.current[frame]
-        ) {
-          requestAnimationFrame(() =>
-            drawFrame(
-              mobileCache.current[frame],
-              mobileCanvasRef.current,
-              mobileCtxRef.current
-            )
-          );
-          lastFrame = frame;
+        const targetFrame = Math.round(1 + self.progress * (frameCount - 1));
+        if (targetFrame !== lastFrame && imageCache.current[targetFrame]) {
+          requestAnimationFrame(() => drawImage(imageCache.current[targetFrame]));
+          lastFrame = targetFrame;
         }
       },
     });
 
     return () => ScrollTrigger.getAll().forEach((st) => st.kill());
-  }, [desktopReady, ]);
-
-  /* ================= MOBILE ================= */
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !isMobile()) return;
-
-    const canvas = mobileCanvasRef.current;
-    const section = mobileSectionRef.current;
-
-    setupCanvas(canvas, mobileCtxRef);
-
-    preload(
-      mobileFrameCount,
-      frameSrcMobile,
-      mobileCache,
-      () => {
-        drawFrame(
-          mobileCache.current[1],
-          canvas,
-          mobileCtxRef.current
-        );
-        setMobileReady(true);
-      }
-    );
-
-    const onScroll = () => {
-      if (!mobileReady) return;
-
-      const rect = section.getBoundingClientRect();
-      const progress = Math.min(
-        1,
-        Math.max(0, -rect.top / rect.height)
-      );
-
-      const frame = Math.round(
-        1 + progress * (mobileFrameCount - 1)
-      );
-
-      const img = mobileCache.current[frame];
-      if (img) {
-        requestAnimationFrame(() =>
-          drawFrame(img, canvas, mobileCtxRef.current)
-        );
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", () =>
-      setupCanvas(canvas, mobileCtxRef)
-    );
-
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [mobileReady]);
-
-  /* ================= JSX ================= */
+  }, { scope: sectionRef, dependencies: [isLoaded, frameCount, drawImage] });
 
   return (
     <>
-      {/* MOBILE */}
-      <section
-        ref={mobileSectionRef}
-        className="hero hero--mobile"
-        role="banner"
-        style={{ height: "100vh" }}
-      >
-        <canvas ref={mobileCanvasRef} className="hero__canvas" />
-
+      <section className="hero hero--mobile" role="banner">
+        <div className="hero__bg-mobile" />
         <div className="hero__content-mobile">
-          <h1 className="hero__title-mobile">TECH-Space</h1>
-          <p className="hero__subtitle-mobile">
-            Международный выставочный комплекс
-          </p>
-          <p className="hero__location-mobile">
-            Тверская 9, Москва
-          </p>
-
+          <h1 className="hero__title-mobile">TECH‑Space</h1>
+          <p className="hero__subtitle-mobile">Международный выставочный комплекс</p>
+          <p className="hero__location-mobile">Тверская 9, Москва</p>
           <div className="hero__buttons-mobile">
-            <Link
-              href="https://tickets.art-space.world/#events"
-              target="_blank"
-            >
+            <Link href="https://tickets.art-space.world/#events" className="hero__btn hero__btn--primary" target="_blank" rel="noopener noreferrer">
               Билеты
             </Link>
-            <Link href="/events">Афиша</Link>
+            <Link href="/events" className="hero__btn hero__btn--secondary">
+              Афиша
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* DESKTOP */}
-      <section
-        ref={desktopSectionRef}
-        className="hero hero--desktop"
-        role="banner"
-      >
-        <canvas ref={desktopCanvasRef} className="hero__canvas" />
-
+      <section ref={sectionRef} className="hero hero--desktop" role="banner">
+        {!firstFrameLoaded && (
+          <div className="loading-overlay">
+            <div className="loading-spinner"></div>
+            <p>Загрузка...</p>
+          </div>
+        )}
+        <canvas ref={canvasRef} className="hero__canvas" />
         <div className="text-swap-container">
-          <p>ЛОКАЦИЯ: МОСКВА, ТВЕРСКАЯ 9</p>
-          <h1>TECHSPACE MOSCOW</h1>
-          <h3>Суверенное будущее</h3>
+          <p className="text-item">
+            ЛОКАЦИЯ: МОССКВА, ТВЕРСКАЯ 9
+          </p>
+          <h1 className="text-item text-item--first">TECHSPACE MOSCOW</h1>
+          <h3 className="text-item text-item--first">Суверенное Будущее</h3>
+          {/* <h3 className="text-item text-item--first">Выставочный</h3>
+          <h3 className="text-item text-item--first">Комплекс</h3> */}
         </div>
       </section>
     </>

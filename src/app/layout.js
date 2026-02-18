@@ -122,9 +122,9 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} ${tektur.variable}`}>
 
         <Navbar />
-        <ScrollSmootherWrapper>
+        {/* <ScrollSmootherWrapper> */}
           {children}
-        </ScrollSmootherWrapper>
+        {/* </ScrollSmootherWrapper> */}
       </body>
     </html>
   );

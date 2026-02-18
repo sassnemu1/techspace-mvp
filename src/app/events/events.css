@@ -73,8 +73,8 @@
 /* Filter - Минималистичный стиль */
 .events-filter {
   padding: 0 clamp(20px, 5vw, 80px) 40px;
-  position: sticky;
-  top: 80px;
+  /* position: sticky;
+  top: 60px; */
   z-index: 10;
   background: linear-gradient(to bottom, #0a0a0a 0%, #0a0a0a 80%, transparent 100%);
   padding-top: 20px;
