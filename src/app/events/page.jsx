@@ -2,35 +2,23 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Head from "next/head";
+
+import { eventData } from "@/data/eventData";
 
 import Footer from '@/components/Footer/Footer';
 
 import './events.css';
-import Head from "next/head";
 
 export default function EventsPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [isTransitioning, setIsTransitioning] = useState(false);
 
+  const events = Object.values(eventData).map(event => event.meta);
   const exhibitions = [
     
   ];
-
-  const events = [
-    {
-      id: 1,
-      type: 'event',
-      title: "TECHSPACE: ARTIFICIAL INTELLIGENCE",
-      date: "26 февраля 2026",
-      shortDate: "26 февраля 2026 - 4 марта 2026",
-      description: "Это официальный старт работы TechSpace - момент, когда внимание Правительства, федеральных СМИ и титатов индустрии будет максимальным.",
-      image: "/assets/become-sponsor.webp",
-      category: "Неделя Событий",
-      link: '/events/techspace-artificial-intelligence'
-    },
-
-  ];
-
+  
   const allItems = [...exhibitions, ...events].sort((a, b) => 
     new Date(a.date) - new Date(b.date)
   );
@@ -217,7 +205,6 @@ export default function EventsPage() {
         ))}
       </section>
 
-      {/* ✅ Footer с key для пересоздания */}
       <Footer key={activeTab} />
     </main>
     </>

@@ -25,7 +25,7 @@ export const menuData = {
     { 
       id: "Для Спонсоров", 
       label: "Для Спонсоров", 
-      href: "/",
+      href: "/sponsor",
       subLinks: [
         {id: 'sponsor', label: 'Спонсоры', href: '/sponsor'},
         {id: 'become-sponsor', label: 'Стать Спонсором', href: '/become-sponsor'},

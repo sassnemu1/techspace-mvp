@@ -1,165 +1,279 @@
 "use client";
 
 import { useEffect, useRef, useCallback, useState } from "react";
-import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const SCROLL_PX_PER_FRAME = 15;
+const MAX_CONCURRENT = 6;
+const BASE_PRELOAD_RADIUS = 20;
+
+// ─────────────────────────────────────────────
+// Bitmap loader (через blob)
+// ─────────────────────────────────────────────
+async function loadBitmap(url) {
+  const res = await fetch(url, { priority: "high" });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const blob = await res.blob();
+  return createImageBitmap(blob);
+}
+
+// ─────────────────────────────────────────────
+// Пул загрузки
+// ─────────────────────────────────────────────
+function createPriorityPool(concurrency) {
+  let active = 0;
+  const high = [];
+  const normal = [];
+
+  function next() {
+    if (active >= concurrency) return;
+    const job = high.shift() || normal.shift();
+    if (!job) return;
+
+    active++;
+    job().finally(() => {
+      active--;
+      next();
+    });
+  }
+
+  return {
+    high(task) {
+      high.push(task);
+      next();
+    },
+    normal(task) {
+      normal.push(task);
+      next();
+    },
+  };
+}
+
+// ─────────────────────────────────────────────
+// Component
+// ─────────────────────────────────────────────
 export default function HeroSection({ frameCount }) {
   const sectionRef = useRef(null);
   const canvasRef = useRef(null);
-  const contextRef = useRef(null);
+  const ctxRef = useRef(null);
 
-  const imageCache = useRef({});
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [firstFrameLoaded, setFirstFrameLoaded] = useState(false);
+  const cache = useRef(new Map());
+  const inflight = useRef(new Set()); // кадры в процессе загрузки
+  const progressRef = useRef(0);
+  const displayedFrame = useRef(0);
+  const lastProgress = useRef(-1);
 
-  const currentFrame = useCallback(
-    (index) => `/seq/output_${String(index).padStart(4, "0")}.webp`,
-    []
-  );
+  const poolRef = useRef(null);
+  const tickerRef = useRef(null);
 
-  const setCanvasSize = useCallback(() => {
+  const [ready, setReady] = useState(false);
+
+  const frameUrl = (i) =>
+    `/seq/output_${String(i).padStart(4, "0")}.webp`;
+
+  // ─────────────────────────────────────────────
+  // Canvas
+  // ─────────────────────────────────────────────
+  const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const dpr = 1;
     canvas.width = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
 
-    const context = canvas.getContext("2d", { alpha: false, desynchronized: true });
-    context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    contextRef.current = context;
+    ctxRef.current = canvas.getContext("2d", {
+      alpha: false,
+      desynchronized: true,
+    });
   }, []);
 
-  const drawImage = useCallback((img) => {
+  const drawFrame = useCallback((bitmap) => {
+    const ctx = ctxRef.current;
     const canvas = canvasRef.current;
-    const context = contextRef.current;
-    if (!canvas || !context || !img) return;
+    if (!ctx || !canvas || !bitmap) return;
 
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const canvasRatio = vw / vh;
-    const imgRatio = img.width / img.height;
+    const vw = canvas.width;
+    const vh = canvas.height;
+
+    const cr = vw / vh;
+    const ir = bitmap.width / bitmap.height;
 
     let dw, dh, dx, dy;
 
-    if (imgRatio > canvasRatio) {
+    if (ir > cr) {
       dh = vh;
-      dw = dh * imgRatio;
+      dw = dh * ir;
       dx = (vw - dw) / 2;
       dy = 0;
     } else {
       dw = vw;
-      dh = dw / imgRatio;
+      dh = dw / ir;
       dx = 0;
       dy = (vh - dh) / 2;
     }
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(img, dx, dy, dw, dh);
+    ctx.drawImage(bitmap, dx, dy, dw, dh);
   }, []);
 
-  const preloadImages = useCallback(() => {
-    let loadedCount = 0;
-    const firstImg = new Image();
-    firstImg.onload = () => {
-      imageCache.current[1] = firstImg;
-      setFirstFrameLoaded(true);
-      drawImage(firstImg);
-      loadedCount++;
+  // ─────────────────────────────────────────────
+  // Загрузка кадра с приоритетом
+  // ─────────────────────────────────────────────
+  const requestFrame = useCallback((index, priority = "normal") => {
+    if (cache.current.has(index)) return;
+    if (inflight.current.has(index)) return; // уже грузится — не дублируем
 
-      // ленивое предзагрузка остальных кадров
-      for (let i = 2; i <= frameCount; i++) {
-        const img = new Image();
-        img.onload = () => {
-          imageCache.current[i] = img;
-          loadedCount++;
-          if (loadedCount === frameCount) setIsLoaded(true);
-        };
-        img.src = currentFrame(i);
+    inflight.current.add(index);
+
+    const task = async () => {
+      try {
+        const bitmap = await loadBitmap(frameUrl(index));
+        cache.current.set(index, bitmap);
+      } catch (e) {
+        console.warn("Frame error:", e.message);
+      } finally {
+        inflight.current.delete(index); // снимаем метку в любом случае
       }
     };
-    firstImg.src = currentFrame(1);
-  }, [frameCount, currentFrame, drawImage]);
 
-  useEffect(() => {
-    if (typeof window === "undefined" || window.innerWidth < 768) return;
+    poolRef.current[priority](task);
+  }, []);
 
-    setCanvasSize();
-    preloadImages();
-    window.addEventListener("resize", setCanvasSize);
-    return () => window.removeEventListener("resize", setCanvasSize);
-  }, [setCanvasSize, preloadImages]);
+  // ─────────────────────────────────────────────
+  // Preload вокруг target
+  // ─────────────────────────────────────────────
+  const preloadAround = useCallback(
+    (center, velocity) => {
+      const dynamicRadius =
+        BASE_PRELOAD_RADIUS + Math.min(20, Math.floor(velocity * 40));
 
-  useGSAP(() => {
-    if (!isLoaded || typeof window === "undefined") return;
+      const start = Math.max(1, center - dynamicRadius);
+      const end = Math.min(frameCount, center + dynamicRadius);
 
-    const section = sectionRef.current;
-    if (!section) return;
+      for (let i = start; i <= end; i++) {
+        requestFrame(i, "normal");
+      }
+    },
+    [frameCount, requestFrame]
+  );
 
-    const scrollLength = "+=1800vh";
-    let lastFrame = 1;
+  // ─────────────────────────────────────────────
+  // Ticker (идеально синхронизирован с RAF)
+  // ─────────────────────────────────────────────
+  const setupTicker = useCallback(() => {
+    if (tickerRef.current) return;
 
-    ScrollTrigger.create({
-      trigger: section,
-      start: "top top",
-      end: scrollLength,
-      pin: true,
-      anticipatePin: 1,
-      scrub: 0.5,
-      onUpdate: (self) => {
-        const targetFrame = Math.round(1 + self.progress * (frameCount - 1));
-        if (targetFrame !== lastFrame && imageCache.current[targetFrame]) {
-          requestAnimationFrame(() => drawImage(imageCache.current[targetFrame]));
-          lastFrame = targetFrame;
+    tickerRef.current = () => {
+      const progress = progressRef.current;
+
+      // ранний выход если прогресс не изменился
+      if (progress === lastProgress.current) return;
+
+      const velocity = Math.abs(progress - lastProgress.current);
+      lastProgress.current = progress;
+
+      const target = Math.max(
+        1,
+        Math.min(
+          frameCount,
+          Math.round(1 + progress * (frameCount - 1))
+        )
+      );
+
+      if (target !== displayedFrame.current) {
+        if (!cache.current.has(target)) {
+          requestFrame(target, "high");
         }
+
+        const bitmap = cache.current.get(target);
+        if (bitmap) {
+          drawFrame(bitmap);
+          displayedFrame.current = target;
+        }
+      }
+
+      preloadAround(target, velocity);
+    };
+
+    gsap.ticker.add(tickerRef.current);
+  }, [frameCount, drawFrame, requestFrame, preloadAround]);
+
+  // ─────────────────────────────────────────────
+  // Init
+  // ─────────────────────────────────────────────
+  useEffect(() => {
+    if (typeof window === "undefined" || window.innerWidth < 768)
+      return;
+
+    initCanvas();
+    poolRef.current = createPriorityPool(MAX_CONCURRENT);
+
+    requestFrame(1, "high");
+
+    const checkFirst = setInterval(() => {
+      if (cache.current.has(1)) {
+        drawFrame(cache.current.get(1));
+        displayedFrame.current = 1;
+        setReady(true);
+        clearInterval(checkFirst);
+      }
+    }, 16);
+
+    window.addEventListener("resize", initCanvas);
+
+    return () => {
+      window.removeEventListener("resize", initCanvas);
+      gsap.ticker.remove(tickerRef.current);
+      cache.current.forEach((bm) => bm.close());
+      cache.current.clear();
+      inflight.current.clear();
+    };
+  }, [initCanvas, requestFrame, drawFrame]);
+
+  // ─────────────────────────────────────────────
+  // ScrollTrigger
+  // ─────────────────────────────────────────────
+  useGSAP(() => {
+    if (!ready) return;
+
+    setupTicker();
+
+    const st = ScrollTrigger.create({
+      trigger: sectionRef.current,
+      start: "top top",
+      end: `+=${frameCount * SCROLL_PX_PER_FRAME}`,
+      pin: true,
+      scrub: false,
+      onUpdate(self) {
+        progressRef.current = self.progress;
       },
     });
 
-    return () => ScrollTrigger.getAll().forEach((st) => st.kill());
-  }, { scope: sectionRef, dependencies: [isLoaded, frameCount, drawImage] });
+    return () => {
+      st.kill();
+    };
+  }, { scope: sectionRef, dependencies: [ready, frameCount, setupTicker] });
 
   return (
-    <>
-      <section className="hero hero--mobile" role="banner">
-        <div className="hero__bg-mobile" />
-        <div className="hero__content-mobile">
-          <h1 className="hero__title-mobile">TECH‑Space</h1>
-          <p className="hero__subtitle-mobile">Международный выставочный комплекс</p>
-          <p className="hero__location-mobile">Тверская 9, Москва</p>
-          <div className="hero__buttons-mobile">
-            <Link href="https://tickets.art-space.world/#events" className="hero__btn hero__btn--primary" target="_blank" rel="noopener noreferrer">
-              Билеты
-            </Link>
-            <Link href="/events" className="hero__btn hero__btn--secondary">
-              Афиша
-            </Link>
-          </div>
+    <section ref={sectionRef} className="hero hero--desktop">
+      {!ready && (
+        <div className="loading-overlay">
+          <div className="loading-spinner" />
+          <p>Загрузка...</p>
         </div>
-      </section>
+      )}
 
-      <section ref={sectionRef} className="hero hero--desktop" role="banner">
-        {!firstFrameLoaded && (
-          <div className="loading-overlay">
-            <div className="loading-spinner"></div>
-            <p>Загрузка...</p>
-          </div>
-        )}
-        <canvas ref={canvasRef} className="hero__canvas" />
-        <div className="text-swap-container">
-          <p className="text-item">
-            ЛОКАЦИЯ: МОССКВА, ТВЕРСКАЯ 9
-          </p>
-          <h1 className="text-item text-item--first">TECHSPACE MOSCOW</h1>
-          <h3 className="text-item text-item--first">Суверенное Будущее</h3>
-          {/* <h3 className="text-item text-item--first">Выставочный</h3>
-          <h3 className="text-item text-item--first">Комплекс</h3> */}
-        </div>
-      </section>
-    </>
+      <canvas ref={canvasRef} className="hero__canvas" />
+
+      <div className="text-swap-container">
+        <p>ЛОКАЦИЯ: МОСКВА, ТВЕРСКАЯ 9</p>
+        <h1>TECHSPACE MOSCOW</h1>
+        <h3>Суверенное Будущее</h3>
+      </div>
+    </section>
   );
 }

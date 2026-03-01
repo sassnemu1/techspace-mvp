@@ -7,7 +7,7 @@ export default function ContactsSection({ id = "contacts-section" }) {
         <div className="contacts-header">
           <div className="contacts-badge">
             <span className="contacts-badge-dot" />
-            <span>FOR THE KONTACTS PAGE</span>
+            <span>FOR THE CONTACTS PAGE</span>
           </div>
 
           <h2 className="contacts-title">

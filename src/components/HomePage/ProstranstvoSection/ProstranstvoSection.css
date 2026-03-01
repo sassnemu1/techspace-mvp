@@ -160,7 +160,7 @@
 }
 
 .floor-description {
-  font-size: clamp(15px, 1.9vw, 18px);
+  font-size: clamp(14px, 1.4vw, 16px);
   line-height: 1.7;
   color: #aaa;
   margin: 0 0 32px 0;

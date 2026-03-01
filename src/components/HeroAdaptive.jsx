@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import HeroSection from "@/components/HeroSection"; // твоя полная версия
-import HeroSectionLite from "@/components/HeroSectionLite"; // лёгкая версия
+import HeroSection from "@/components/HeroSection";
+import HeroSectionLite from "@/components/HeroSectionLite"; 
 
 export default function HeroAdaptive() {
   const [isPowerful, setIsPowerful] = useState(null);
@@ -16,10 +16,8 @@ export default function HeroAdaptive() {
     const cores = navigator.hardwareConcurrency || 2;
     const ram = navigator.deviceMemory || 4;
 
-    // простая логика: ≥ 8 ядер и ≥ 8 ГБ → мощное устройство
     const strong = cores >= 8 && ram >= 8;
 
-    // fallback на тест FPS
     let frames = 0;
     const start = performance.now();
 

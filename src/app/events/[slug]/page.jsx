@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
+import { eventData } from '@/data/eventData';
+
 import './event-detail.css';
 
 
@@ -13,78 +15,11 @@ const Footer = dynamic(() => import('@/components/Footer/Footer'), {
   ssr: true
 });
 
-// База данных событий
-const eventsData = {
-  'techspace-artificial-intelligence': {
-    id: 2,
-    type: 'event',
-    title: "TECHSPACE: ARTIFICIAL INTELLIGENCE",
-    subtitle: "Первая публичная неделя TechSpace",
-    date: "26 февраля – 4 марта 2026",
-    time: "Ежедневно с 10:00 до 22:00",
-    location: "Все этажи комплекса",
-    image: "/assets/become-sponsor.webp",
-    description: `Это не просто тематическая неделя. Это официальный старт TechSpace - момент, когда внимание Правительства, федеральных СМИ и титатов индустрии будет максимальным.
-
-    Именно в эти даты закладывается фундамент национального технологического сувенеритета.`,
-
-    highlights: [
-      {
-        title: "Гранд-Открытие",
-        description: "Официальный старт TechSpace. Внимание власти, медиа и лидеров индустрии сконцентрировано здесь. "
-      },
-      {
-        title: "Фокус-Интеллект",
-        description: "ИИ - это (Мозг) Суверенного Города. Все последующие недели сезона опираются на решения, представленные здесь."
-      },
-      {
-        title: "Элитная Аудитория",
-        description: "Разработчики LLM, создатели нейрочипов, интеграторы. В день открытия - вся цифровая элита страны. "
-      }
-    ],
-
-    sectionTitle: "Неделя интелекта: от кода к контракту",
-
-    subsectionEventWeek: [
-      {
-        number: "1",
-        title: "GRAND OPENING",
-        description: "Официальная закрытая церемония открытия TechSpace. Федеральные министры, главы корпораций, инвесторы (First Light). Экспозиция закрыта для широкой публики - только VIP протокол.",
-        date: "26 февраля"
-      },
-      {
-        number: "2",
-        title: "STURTUP & ENTERPRICE",
-        description: "Старт деловой программы и звезд участников Хакатона. (4-этаж). CDO, технический директора, венчурные фонды. ",
-        date: "27 февраля"
-      },
-      {
-        number: "3",
-        title: "PUBLIC DAYS",
-        description: "(ИИ для людей). Открытые двери для широкой публики, студентов. Популяризация отечественных LLM-моделей",
-        date: "28 февраля - 1 марта"
-      },
-      {
-        number: "4",
-        title: "DEAL CLOSING",
-        description: "Тихие переговоры и подписание контрактов в закрытых переговорных комнатах.",
-        date: "2 - 3 марта "
-      },
-      {
-        number: "5",
-        title: "FINALY",
-        description: "Финал Хакатона, награждение победителей и торжественное завершение экспозиции.",
-        date: "4 марта"
-      },
-    ],
-
-    tickets: "https://tickets.art-space.world/#events"
-  },
-};
-
 export default function EventDetailPage({ params }) {
   const resolvedParams = use(params);
-  const event = eventsData[resolvedParams.slug];
+
+  const { meta, content } = eventData[resolvedParams.slug];
+  const event = content
 
   if (!event) {
     notFound();
@@ -327,7 +262,7 @@ export default function EventDetailPage({ params }) {
               {/* Tickets - БЕЗ ЦЕНЫ */}
               <div className="sidebar-card">
                 <h3 className="sidebar-card-title">Забронировать место</h3>
-                <a href={event.tickets} className="sidebar-cta-btn">
+                <a href={"#"} className="sidebar-cta-btn">
                   Купить билет
                   <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -337,7 +272,7 @@ export default function EventDetailPage({ params }) {
 
               <div className="sidebar-card">
                 <h3 className="sidebar-card-title">Стать участником</h3>
-                <a href={event.tickets} className="sidebar-cta-btn">
+                <a href={"#"} className="sidebar-cta-btn">
                   Подробнее
                   <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
                     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

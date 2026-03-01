@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import dynamic from 'next/dynamic';
+
 import './sponsor.css';
 import '../become-sponsor/become-sponsore.css';
 
@@ -15,12 +16,12 @@ const Footer = dynamic(() => import('@/components/Footer/Footer'), {
 });
 
 const sponsorsData = [
-  { name: 'Яндекс', logo: '/logos/yandex.png', tier: 'title', year: 2025 },
-  { name: 'Сбер', logo: '/logos/sber.png', tier: 'official', year: 2025 },
-  { name: 'VK', logo: '/logos/vk.png', tier: 'sprint', year: 2025 },
-  { name: 'Ростелеком', logo: '/logos/rostel.png', tier: 'title', year: 2025 },
-  { name: 'Газпромбанк', logo: '/logos/gazprom.svg', tier: 'official', year: 2025 },
-  { name: 'МТС', logo: '/logos/mts.svg', tier: 'sprint', year: 2025 },
+  { name: 'Яндекс', logo: '/assets/logos/yandex.png', tier: 'title', year: 2025 },
+  { name: 'Сбер', logo: '/assets/logos/sber.png', tier: 'official', year: 2025 },
+  { name: 'VK', logo: '/assets/logos/vk.png', tier: 'sprint', year: 2025 },
+  { name: 'Ростелеком', logo: '/assets/logos/rostel.png', tier: 'title', year: 2025 },
+  { name: 'Газпромбанк', logo: '/assets/logos/gazprom.svg', tier: 'official', year: 2025 },
+  { name: 'МТС', logo: '/assets/logos/mts.svg', tier: 'sprint', year: 2025 },
 ];
 
 export default function SponsorsPage() {

@@ -44,12 +44,7 @@
   top: 0;
   bottom: 0;
   width: 1px;
-  background: linear-gradient(
-    180deg,
-    transparent,
-    rgba(255, 255, 255, 0.25),
-    transparent
-  );
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.25), transparent);
   transform: translateX(-50%);
 }
 
@@ -109,12 +104,41 @@
 .award-visual {
   height: 420px;
   border-radius: 20px;
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.05),
-    transparent 70%
-  );
+  background: radial-gradient(circle at center, rgba(255,255,255,0.05), transparent 70%);
+  position: relative;
   overflow: hidden;
+  /* contain останавливает layout thrashing от соседних элементов */
+  contain: layout style;
+  /* will-change подсказывает браузеру выделить отдельный compositor layer */
+  will-change: transform;
+}
+
+.award-visual canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Скелетон */
+.award-visual__skeleton {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.03) 0%,
+    rgba(255,255,255,0.07) 50%,
+    rgba(255,255,255,0.03) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* ===== Timeline Node ===== */
@@ -125,7 +149,7 @@
   border-radius: 50%;
   background: #fff;
   margin: 0 auto;
-  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 6px rgba(255,255,255,0.08);
 }
 
 /* ===== Responsive ===== */
@@ -145,6 +169,10 @@
   .award-text {
     margin: 0 auto;
   }
+
+  .award-row.reverse .award-text {
+    text-align: center;
+  }
 }
 
 @media (max-width: 768px) {
@@ -159,25 +187,4 @@
   .award-visual {
     height: 260px;
   }
-}
-
-
-.award-visual {
-  height: 420px;
-  border-radius: 20px;
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.05),
-    transparent 70%
-  );
-  /* overflow: hidden; */
-  position: relative;
-}
-
-.award-visual canvas {
-  position: absolute;
-  top: 0px;   /* ← регулируй значение */
-  left: 0;
-  width: 100% !important;
-  height: 100% !important;
 }
