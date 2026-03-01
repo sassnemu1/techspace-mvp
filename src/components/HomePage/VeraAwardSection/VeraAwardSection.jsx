@@ -1,13 +1,14 @@
 "use client";
 
-import { useRef, Suspense, useState, useMemo } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useRef, Suspense, useState, useEffect, useMemo, memo } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import {
   OrbitControls,
   ContactShadows,
   PerspectiveCamera,
-  useGLTF
+  useGLTF,
 } from "@react-three/drei";
+import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -16,23 +17,69 @@ import "./VeraAwardSection.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function ManegeModel() {
-  const { scene } = useGLTF("/models/manege.glb");
-  const memoizedScene = useMemo(() => scene.clone(), [scene]);
+// ─── НЕТ useGLTF.preload — модель грузится только при появлении в viewport ───
 
+// ─── Controls с invalidate ─────────────────────────────────────────────────────
+// frameloop="demand" не рендерит автоматически.
+// onChange={invalidate} — сцена перерисуется при вращении мышью.
+
+function ControlsWithInvalidate() {
+  const { invalidate } = useThree();
   return (
-    <primitive
-      object={memoizedScene}
-      scale={7.5}
-      position={[0, -0.6, 0]}
-      rotation={[0.1, 0.3, 0]}
-      castShadow
-      receiveShadow
+    <OrbitControls
+      enableZoom
+      enablePan={false}
+      minDistance={3}
+      maxDistance={7}
+      minPolarAngle={Math.PI / 3}
+      maxPolarAngle={Math.PI / 2}
+      onChange={invalidate}
     />
   );
 }
 
-useGLTF.preload("/models/manege.glb");
+// ─── Model ─────────────────────────────────────────────────────────────────────
+// Клонируем из кэша useGLTF — не мутируем оригинал.
+// Dispose геометрий/материалов/текстур при анмаунте.
+
+const ManegeModel = memo(function ManegeModel() {
+  const { scene: sourceScene } = useGLTF("/models/manege-optimized.glb");
+
+  const clone = useMemo(() => {
+    const c = sourceScene.clone(true);
+    c.scale.setScalar(7.5);
+    c.position.set(0, -0.6, 0);
+    c.rotation.set(0.1, 0.3, 0);
+    c.traverse((child) => {
+      if (!child.isMesh) return;
+      child.frustumCulled = true;
+      child.castShadow = false;
+      child.receiveShadow = false;
+    });
+    return c;
+  }, [sourceScene]);
+
+  useEffect(() => {
+    return () => {
+      clone.traverse((child) => {
+        if (!child.isMesh) return;
+        child.geometry?.dispose();
+        const mats = Array.isArray(child.material) ? child.material : [child.material];
+        mats.forEach((m) => {
+          if (!m) return;
+          Object.values(m).forEach((v) => {
+            if (v instanceof THREE.Texture) v.dispose();
+          });
+          m.dispose();
+        });
+      });
+    };
+  }, [clone]);
+
+  return <primitive object={clone} />;
+});
+
+// ─── Scene ─────────────────────────────────────────────────────────────────────
 
 function Scene3D() {
   return (
@@ -40,31 +87,88 @@ function Scene3D() {
       <PerspectiveCamera makeDefault position={[0, 0.4, 5]} fov={80} />
       <ambientLight intensity={0.5} />
       <hemisphereLight intensity={0.9} groundColor="#222222" />
-      <directionalLight
-        position={[3, 5, 3]}
-        intensity={1.3}
-        castShadow
-      />
+      <directionalLight position={[3, 5, 3]} intensity={1.3} />
       <Suspense fallback={null}>
         <ManegeModel />
-        <ContactShadows
-          position={[0, -1.5, 0]}
-          opacity={0.3}
-          scale={6}
-          blur={2}
-        />
+        <ContactShadows position={[0, -1.5, 0]} opacity={0.3} scale={6} blur={2} />
       </Suspense>
-      <OrbitControls
-        enableZoom
-        enablePan={false}
-        minDistance={3}
-        maxDistance={7}
-        minPolarAngle={Math.PI / 3}
-        maxPolarAngle={Math.PI / 2}
-      />
+      <ControlsWithInvalidate />
     </>
   );
 }
+
+// ─── Placeholder ───────────────────────────────────────────────────────────────
+
+function ModelPlaceholder() {
+  return (
+    <div className="vera-model-placeholder" aria-hidden="true">
+      <div className="vera-model-placeholder__ring" />
+      <div className="vera-model-placeholder__ring vera-model-placeholder__ring--2" />
+    </div>
+  );
+}
+
+// ─── LazyCanvas ────────────────────────────────────────────────────────────────
+// Canvas монтируется ТОЛЬКО когда секция появляется в viewport (+150px запас).
+// До этого — placeholder. После mount — Canvas живёт, не демонтируется.
+
+const LazyCanvas = memo(function LazyCanvas({ observeRef }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const el = observeRef?.current;
+    if (!el) return;
+
+    if (!("IntersectionObserver" in window)) {
+      setMounted(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setMounted(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "150px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [observeRef]);
+
+  const handleCreated = ({ gl }) => {
+    const canvas = gl.domElement;
+    canvas.addEventListener("webglcontextlost", (e) => {
+      e.preventDefault();
+      console.warn("[VeraAward 3D] WebGL context lost");
+    });
+    canvas.addEventListener("webglcontextrestored", () => {
+      console.info("[VeraAward 3D] WebGL context restored");
+    });
+  };
+
+  if (!mounted) return <ModelPlaceholder />;
+
+  return (
+    <Canvas
+      shadows={false}
+      dpr={[1, 1.5]}
+      frameloop="demand"
+      gl={{
+        antialias: true,
+        powerPreference: "high-performance",
+        failIfMajorPerformanceCaveat: false,
+      }}
+      onCreated={handleCreated}
+    >
+      <Scene3D />
+    </Canvas>
+  );
+});
+
+// ─── VeraAwardSection ──────────────────────────────────────────────────────────
 
 export default function VeraAwardSection({ id = "vera-award-section" }) {
   const sectionRef = useRef(null);
@@ -76,11 +180,6 @@ export default function VeraAwardSection({ id = "vera-award-section" }) {
   const canvasContainerRef = useRef(null);
 
   const [formOpen, setFormOpen] = useState(false);
-
-  const handleFormSubmit = (data) => {
-    console.log("Отправленные данные:", data);
-    setFormOpen(false);
-  };
 
   useGSAP(
     () => {
@@ -94,108 +193,63 @@ export default function VeraAwardSection({ id = "vera-award-section" }) {
           trigger: section,
           start: "top 75%",
           end: "top 30%",
-          toggleActions: "play none none reverse"
+          toggleActions: "play none none reverse",
         };
 
         if (badgeRef.current) {
-          gsap.fromTo(
-            badgeRef.current,
+          gsap.fromTo(badgeRef.current,
             { opacity: 0, y: 20 },
             { opacity: 1, y: 0, duration: 0.6, ease: "power3.out", scrollTrigger: baseTrigger }
           );
         }
-
         if (titleRef.current) {
-          gsap.fromTo(
-            titleRef.current,
+          gsap.fromTo(titleRef.current,
             { opacity: 0, y: 40 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              delay: 0.1,
-              ease: "power3.out",
-              scrollTrigger: baseTrigger
-            }
+            { opacity: 1, y: 0, duration: 0.8, delay: 0.1, ease: "power3.out", scrollTrigger: baseTrigger }
           );
         }
-
         if (subtitleRef.current) {
-          gsap.fromTo(
-            subtitleRef.current,
+          gsap.fromTo(subtitleRef.current,
             { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.7,
-              delay: 0.25,
-              ease: "power3.out",
-              scrollTrigger: baseTrigger
-            }
+            { opacity: 1, y: 0, duration: 0.7, delay: 0.25, ease: "power3.out", scrollTrigger: baseTrigger }
           );
         }
-
         if (statsRef.current) {
           gsap.fromTo(
             statsRef.current.querySelectorAll(".vera-stat-item"),
             { opacity: 0, y: 20, scale: 0.95 },
             {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.6,
-              stagger: 0.1,
-              delay: 0.35,
+              opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.1, delay: 0.35,
               ease: "power3.out",
-              scrollTrigger: {
-                trigger: statsRef.current,
-                start: "top 70%",
-                toggleActions: "play none none reverse"
-              }
+              scrollTrigger: { trigger: statsRef.current, start: "top 70%", toggleActions: "play none none reverse" },
             }
           );
         }
-
         if (blocksRef.current) {
           gsap.fromTo(
             blocksRef.current.querySelectorAll(".vera-block"),
             { opacity: 0, y: 30 },
             {
-              opacity: 1,
-              y: 0,
-              duration: 0.7,
-              stagger: 0.12,
-              delay: 0.2,
+              opacity: 1, y: 0, duration: 0.7, stagger: 0.12, delay: 0.2,
               ease: "power3.out",
-              scrollTrigger: {
-                trigger: blocksRef.current,
-                start: "top 70%",
-                toggleActions: "play none none reverse"
-              }
+              scrollTrigger: { trigger: blocksRef.current, start: "top 70%", toggleActions: "play none none reverse" },
+            }
+          );
+        }
+        if (canvasContainerRef.current) {
+          gsap.fromTo(canvasContainerRef.current,
+            { opacity: 0, x: 80, scale: 0.9 },
+            {
+              opacity: 1, x: 0, scale: 1, duration: 1.1, ease: "power3.out",
+              scrollTrigger: { trigger: canvasContainerRef.current, start: "top 75%", toggleActions: "play none none reverse" },
             }
           );
         }
 
-        if (canvasContainerRef.current) {
-          gsap.fromTo(
-            canvasContainerRef.current,
-            { opacity: 0, x: 80, scale: 0.9 },
-            {
-              opacity: 1,
-              x: 0,
-              scale: 1,
-              duration: 1.1,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: canvasContainerRef.current,
-                start: "top 75%",
-                toggleActions: "play none none reverse"
-              }
-            }
-          );
-        }
+        return () => {};
       });
-      
+
+      return () => mm.revert();
     },
     { scope: sectionRef }
   );
@@ -212,28 +266,17 @@ export default function VeraAwardSection({ id = "vera-award-section" }) {
         {/* Левая «витрина» */}
         <div ref={canvasContainerRef} className="vera-canvas-shell">
           <div className="vera-canvas-frame">
-            <Canvas
-              shadows={false}
-              dpr={[1, 1.5]}
-              frameloop="demand"
-            >
-              <Scene3D />
-            </Canvas>
+            {/* observeRef передаём для IntersectionObserver внутри LazyCanvas */}
+            <LazyCanvas observeRef={canvasContainerRef} />
             <div className="vera-canvas-hint">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M4 12C4 8.13 7.13 5 11 5H13C16.87 5 20 8.13 20 12C20 15.87 16.87 19 13 19H11"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"
                 />
                 <path
                   d="M8 12L4 12L6 10M6 14L4 12"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"
                 />
               </svg>
               <span>Поверните Манеж мышью</span>
@@ -280,44 +323,27 @@ export default function VeraAwardSection({ id = "vera-award-section" }) {
             <div ref={blocksRef} className="vera-blocks">
               <div className="vera-block">
                 <h3 className="vera-block-title">ВЫЗОВ</h3>
-                <p>
-                  Манеж находится в 50 метрах от Кремля. В этой зоне безопасности GPS глушится, и шоу дронов физически невозможны: воздух закрыт, традиционные спецэффекты не работают.
-                </p>
+                <p>Манеж находится в 50 метрах от Кремля. В этой зоне безопасности GPS глушится, и шоу дронов физически невозможны: воздух закрыт, традиционные спецэффекты не работают.</p>
               </div>
-
               <div className="vera-block">
                 <h3 className="vera-block-title">РЕШЕНИЕ</h3>
-                <p>
-                  Вместо неба — невидимый слой. Общая цифровая реальность через AR‑очки Kizo превращает ограничения безопасности в демонстрацию технологий, доступную только участникам.
-                </p>
+                <p>Вместо неба — невидимый слой. Общая цифровая реальность через AR‑очки Kizo превращает ограничения безопасности в демонстрацию технологий, доступную только участникам.</p>
               </div>
-
               <div className="vera-block">
                 <h3 className="vera-block-title">УЖИН</h3>
-                <p>
-                  Центральные композиции на столах оживают в цифре синхронно с подачей блюд. Виртуальные объекты реагируют на физические в реальном времени, создавая единый сценарий вечера.
-                </p>
+                <p>Центральные композиции на столах оживают в цифре синхронно с подачей блюд. Виртуальные объекты реагируют на физические в реальном времени, создавая единый сценарий вечера.</p>
               </div>
-
               <div className="vera-block">
                 <h3 className="vera-block-title">НАГРАЖДЕНИЕ</h3>
-                <p>
-                  Победители появляются не только на сцене. Их проекты проявляются как массивные 3D‑голограммы, парящие над залом и видимые только через AR‑очки гостей.
-                </p>
+                <p>Победители появляются не только на сцене. Их проекты проявляются как массивные 3D‑голограммы, парящие над залом и видимые только через AR‑очки гостей.</p>
               </div>
-
               <div className="vera-block">
                 <h3 className="vera-block-title">ФИНАЛ</h3>
-                <p>
-                  Синхронизированный «Skyfall» цифрово снимает крышу Манежа, открывая созвездие «Цветок Жизни», которое накрывает Землю защитным куполом в общей цифровой реальности.
-                </p>
+                <p>Синхронизированный «Skyfall» цифрово снимает крышу Манежа, открывая созвездие «Цветок Жизни», которое накрывает Землю защитным куполом в общей цифровой реальности.</p>
               </div>
-
               <div className="vera-block vera-block--accent">
                 <h3 className="vera-block-title">СТРАТЕГИЧЕСКАЯ ПОБЕДА</h3>
-                <p>
-                  Гала‑ужин превращается в четырёхчасовую живую демонстрацию суверенных российских носимых технологий. Techspace доказывает, что новые миры можно строить без опоры на физическое пространство. «Суверенитет безграничен».
-                </p>
+                <p>Гала‑ужин превращается в четырёхчасовую живую демонстрацию суверенных российских носимых технологий. Techspace доказывает, что новые миры можно строить без опоры на физическое пространство. «Суверенитет безграничен».</p>
               </div>
             </div>
           </div>

@@ -188,3 +188,87 @@
     height: 260px;
   }
 }
+
+/* ── Добавить в ProstranstvoSection.css ──────────────────────────────────── */
+
+/* Grid-обёртка (была inline-style, теперь в CSS) */
+.floor-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 60px;
+}
+
+/* Placeholder пока 3D не загрузился */
+.model-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.model-placeholder__ring {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  opacity: 0.2;
+  animation: placeholder-spin 1.4s linear infinite;
+  position: absolute;
+}
+
+.model-placeholder__ring--2 {
+  width: 120px;
+  height: 120px;
+  border-top-color: transparent;
+  border-right-color: currentColor;
+  opacity: 0.1;
+  animation-duration: 2s;
+  animation-direction: reverse;
+}
+
+@keyframes placeholder-spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ── Добавить в VeraAwardSection.css ──────────────────────────────────────── */
+
+.vera-model-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.vera-model-placeholder__ring {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  opacity: 0.2;
+  animation: vera-placeholder-spin 1.4s linear infinite;
+  position: absolute;
+}
+
+.vera-model-placeholder__ring--2 {
+  width: 120px;
+  height: 120px;
+  border-top-color: transparent;
+  border-right-color: currentColor;
+  opacity: 0.1;
+  animation-duration: 2s;
+  animation-direction: reverse;
+}
+
+@keyframes vera-placeholder-spin {
+  to { transform: rotate(360deg); }
+}
