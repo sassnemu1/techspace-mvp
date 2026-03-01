@@ -8,8 +8,9 @@ import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(ScrollTrigger);
 
 const SCROLL_PX_PER_FRAME = 15;
-const MAX_CONCURRENT = 6;
-const BASE_PRELOAD_RADIUS = 20;
+const MAX_CONCURRENT = 10;
+const BASE_PRELOAD_RADIUS = 36;
+const MAX_PRELOAD_BOOST = 32;
 
 // ─────────────────────────────────────────────
 // Bitmap loader (через blob)
@@ -149,7 +150,8 @@ export default function HeroSection({ frameCount }) {
   const preloadAround = useCallback(
     (center, velocity) => {
       const dynamicRadius =
-        BASE_PRELOAD_RADIUS + Math.min(20, Math.floor(velocity * 40));
+        BASE_PRELOAD_RADIUS +
+        Math.min(MAX_PRELOAD_BOOST, Math.floor(velocity * 90));
 
       const start = Math.max(1, center - dynamicRadius);
       const end = Math.min(frameCount, center + dynamicRadius);
