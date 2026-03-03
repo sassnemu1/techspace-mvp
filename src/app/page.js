@@ -23,7 +23,7 @@ const exhibitionsData = [
     image: "/assets/exhibitions/1.jpeg",
     category: "Lastochka.ai",
     location: "Все залы",
-    link: "/events/kusto/"
+    link: "#"
   },
   {
     id: 2,
@@ -34,7 +34,7 @@ const exhibitionsData = [
     image: "/assets/exhibitions/2.jpeg",
     category: "Krypto.Konekt.",
     location: "Все залы",
-    link: "/events/ai-summit"
+    link: "#"
   },
   {
     id: 3,
@@ -45,7 +45,7 @@ const exhibitionsData = [
     image: "/assets/exhibitions/3.jpeg",
     category: "bio.lotusCity.ai",
     location: "Все залы",
-    link: "/events/in-pulse-ai/"
+    link: "#"
   },
   {
     id: 4,
@@ -56,7 +56,7 @@ const exhibitionsData = [
     image: "/assets/exhibitions/1.jpeg",
     category: "CONSTRUCTION.lotusCity.ai.",
     location: "Все залы",
-    link: "/events/tri-vostoka/"
+    link: "#"
   }
 ];
 
@@ -79,7 +79,7 @@ export default async function HomePage() {
       <TimelineSection 
         exhibitions={exhibitionsData}
         label="Календарь событий"
-        title="Выставки 2025"
+        title="Выставки 2026"
         subtitle="Исследуйте наши предстоящие выставки"
       />
 

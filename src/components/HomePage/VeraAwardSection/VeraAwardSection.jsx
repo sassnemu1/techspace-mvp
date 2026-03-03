@@ -43,7 +43,7 @@ function ControlsWithInvalidate() {
 // Dispose геометрий/материалов/текстур при анмаунте.
 
 const ManegeModel = memo(function ManegeModel() {
-  const { scene: sourceScene } = useGLTF("/models/manege-optimized.glb");
+  const { scene: sourceScene } = useGLTF("/models/manege-final.glb");
 
   const clone = useMemo(() => {
     const c = sourceScene.clone(true);
@@ -160,6 +160,7 @@ const LazyCanvas = memo(function LazyCanvas({ observeRef }) {
         antialias: true,
         powerPreference: "high-performance",
         failIfMajorPerformanceCaveat: false,
+        toneMapping: THREE.LinearToneMapping
       }}
       onCreated={handleCreated}
     >

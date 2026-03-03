@@ -7,9 +7,9 @@ import * as THREE from "three";
 import "./AwardsSection.css";
 
 const MODEL_PATHS = {
-  grand:  "/models/grand-optimized.glb",
-  medium: "/models/medium-optimized.glb",
-  mini:   "/models/mini-optimized.glb",
+  grand:  "/models/grand-final.glb",
+  medium: "/models/medium-final.glb",
+  mini:   "/models/mini-final.glb",
 };
 
 // Draco-декодер — нужен до useGLTF, но НЕ preload

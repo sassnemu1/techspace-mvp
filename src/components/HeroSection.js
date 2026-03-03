@@ -8,7 +8,7 @@ import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(ScrollTrigger);
 
 const SCROLL_PX_PER_FRAME = 15;
-const MAX_CONCURRENT = 10;
+const MAX_CONCURRENT = 20; // увеличено
 const BASE_PRELOAD_RADIUS = 36;
 const MAX_PRELOAD_BOOST = 32;
 
@@ -63,7 +63,7 @@ export default function HeroSection({ frameCount }) {
   const ctxRef = useRef(null);
 
   const cache = useRef(new Map());
-  const inflight = useRef(new Set()); // кадры в процессе загрузки
+  const inflight = useRef(new Set());
   const progressRef = useRef(0);
   const displayedFrame = useRef(0);
   const lastProgress = useRef(-1);
@@ -73,8 +73,7 @@ export default function HeroSection({ frameCount }) {
 
   const [ready, setReady] = useState(false);
 
-  const frameUrl = (i) =>
-    `/seq/output_${String(i).padStart(4, "0")}.webp`;
+  const frameUrl = (i) => `/seq/output_${String(i).padStart(4, "0")}.webp`;
 
   // ─────────────────────────────────────────────
   // Canvas
@@ -126,7 +125,7 @@ export default function HeroSection({ frameCount }) {
   // ─────────────────────────────────────────────
   const requestFrame = useCallback((index, priority = "normal") => {
     if (cache.current.has(index)) return;
-    if (inflight.current.has(index)) return; // уже грузится — не дублируем
+    if (inflight.current.has(index)) return;
 
     inflight.current.add(index);
 
@@ -137,7 +136,7 @@ export default function HeroSection({ frameCount }) {
       } catch (e) {
         console.warn("Frame error:", e.message);
       } finally {
-        inflight.current.delete(index); // снимаем метку в любом случае
+        inflight.current.delete(index);
       }
     };
 
@@ -157,22 +156,22 @@ export default function HeroSection({ frameCount }) {
       const end = Math.min(frameCount, center + dynamicRadius);
 
       for (let i = start; i <= end; i++) {
-        requestFrame(i, "normal");
+        // впереди — высокий приоритет
+        const priority = i > center ? "high" : "normal";
+        requestFrame(i, priority);
       }
     },
     [frameCount, requestFrame]
   );
 
   // ─────────────────────────────────────────────
-  // Ticker (идеально синхронизирован с RAF)
+  // Ticker (RAF)
   // ─────────────────────────────────────────────
   const setupTicker = useCallback(() => {
     if (tickerRef.current) return;
 
     tickerRef.current = () => {
       const progress = progressRef.current;
-
-      // ранний выход если прогресс не изменился
       if (progress === lastProgress.current) return;
 
       const velocity = Math.abs(progress - lastProgress.current);
@@ -180,22 +179,22 @@ export default function HeroSection({ frameCount }) {
 
       const target = Math.max(
         1,
-        Math.min(
-          frameCount,
-          Math.round(1 + progress * (frameCount - 1))
-        )
+        Math.min(frameCount, Math.round(1 + progress * (frameCount - 1)))
       );
 
       if (target !== displayedFrame.current) {
-        if (!cache.current.has(target)) {
-          requestFrame(target, "high");
-        }
-
         const bitmap = cache.current.get(target);
         if (bitmap) {
           drawFrame(bitmap);
           displayedFrame.current = target;
         }
+        // если кадр ещё не готов — оставляем последний
+        else if (displayedFrame.current > 0) {
+          drawFrame(cache.current.get(displayedFrame.current));
+        }
+
+        // форсируем загрузку target с высоким приоритетом
+        requestFrame(target, "high");
       }
 
       preloadAround(target, velocity);
@@ -208,13 +207,18 @@ export default function HeroSection({ frameCount }) {
   // Init
   // ─────────────────────────────────────────────
   useEffect(() => {
-    if (typeof window === "undefined" || window.innerWidth < 768)
-      return;
+    if (typeof window === "undefined" || window.innerWidth < 768) return;
 
     initCanvas();
     poolRef.current = createPriorityPool(MAX_CONCURRENT);
 
+    // первая загрузка
     requestFrame(1, "high");
+
+    // предзагрузка первых кадров
+    for (let i = 2; i <= Math.min(frameCount, 20); i++) {
+      requestFrame(i, "high");
+    }
 
     const checkFirst = setInterval(() => {
       if (cache.current.has(1)) {
@@ -234,7 +238,7 @@ export default function HeroSection({ frameCount }) {
       cache.current.clear();
       inflight.current.clear();
     };
-  }, [initCanvas, requestFrame, drawFrame]);
+  }, [initCanvas, requestFrame, drawFrame, frameCount]);
 
   // ─────────────────────────────────────────────
   // ScrollTrigger
@@ -255,9 +259,7 @@ export default function HeroSection({ frameCount }) {
       },
     });
 
-    return () => {
-      st.kill();
-    };
+    return () => st.kill();
   }, { scope: sectionRef, dependencies: [ready, frameCount, setupTicker] });
 
   return (
